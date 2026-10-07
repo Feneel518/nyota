@@ -9,6 +9,16 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { mkdir, readFile, writeFile, unlink, stat } from "node:fs/promises";
 import path from "node:path";
 import { env, localOnly } from "./env";
+
+export function isMissingObject(error: unknown) {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "name" in error &&
+    error.name === "NoSuchKey"
+  );
+}
+
 function client() {
   const e = env();
   return new S3Client({

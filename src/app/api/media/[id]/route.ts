@@ -3,7 +3,7 @@ import { z } from "zod";
 import { db } from "@/server/db";
 import { assets, orders, revisionAssets, weddings } from "@/server/db/schema";
 import { currentUser } from "@/server/auth";
-import { readObject } from "@/server/storage";
+import { isMissingObject, readObject } from "@/server/storage";
 import { endpoint, AppError } from "@/server/security";
 export async function GET(
   req: Request,
@@ -55,15 +55,22 @@ export async function GET(
       throw new AppError(404, "Photo unavailable.");
     const width =
       new URL(req.url).searchParams.get("width") === "1200" ? 1200 : 480;
-    return new Response(
-      new Uint8Array(await readObject(`${a.weddingId}/${a.id}/${width}.webp`)),
-      {
-        headers: {
-          "Content-Type": "image/webp",
-          "Cache-Control": "private, no-store",
-          "X-Content-Type-Options": "nosniff",
+    try {
+      return new Response(
+        new Uint8Array(
+          await readObject(`${a.weddingId}/${a.id}/${width}.webp`),
+        ),
+        {
+          headers: {
+            "Content-Type": "image/webp",
+            "Cache-Control": "private, no-store",
+            "X-Content-Type-Options": "nosniff",
+          },
         },
-      },
-    );
+      );
+    } catch (error) {
+      if (isMissingObject(error)) throw new AppError(404, "Photo unavailable.");
+      throw error;
+    }
   });
 }
