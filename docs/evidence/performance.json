@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-06T12:35:34.934Z",
+  "environment": "Local production build, Chromium emulation; not field data or INP measurement",
+  "profile": "390x844, cold contexts, 4x CPU, 150ms latency, 1.6Mbps down / 750Kbps up",
+  "results": [
+    {
+      "run": 1,
+      "lcp": 1428,
+      "cls": 0.0009977658735232408,
+      "javascriptTransferBytes": 314170,
+      "totalTransferBytes": 430345
+    },
+    {
+      "run": 2,
+      "lcp": 1480,
+      "cls": 0.0009977658735232408,
+      "javascriptTransferBytes": 314170,
+      "totalTransferBytes": 428968
+    },
+    {
+      "run": 3,
+      "lcp": 1484,
+      "cls": 0.0009977658735232408,
+      "javascriptTransferBytes": 314170,
+      "totalTransferBytes": 428968
+    }
+  ]
+}

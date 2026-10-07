@@ -1,0 +1,783 @@
+/* The invitation is a viewport-sized stage; the editor and marketing stay on paper. */
+.invitation[data-immersive="true"] {
+  --world-sky: #ead6cd;
+  --world-ground: #dbc2a5;
+  --world-paper: #fbf6ef;
+}
+.invitation[data-theme="marigold"] {
+  --world-sky: #f7e5b9;
+  --world-ground: #edcf9b;
+}
+.invitation[data-theme="garden"] {
+  --world-sky: #eff0dc;
+  --world-ground: #e0ddc9;
+}
+.invitation[data-theme="rose"] {
+  --world-sky: #f5e0e4;
+  --world-ground: #ebd3cb;
+}
+.invitation[data-theme="midnight"] {
+  --world-sky: #273752;
+  --world-ground: #9c9caa;
+}
+.invitation[data-theme="lotus"] {
+  --world-sky: #dceeee;
+  --world-ground: #c8ded6;
+}
+.invitation[data-immersive="true"] .guest-toolbar {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 20;
+  border: 0;
+  padding: 18px clamp(18px, 3vw, 52px);
+  background: linear-gradient(
+    var(--world-paper),
+    rgb(251 246 239 / 0.88) 65%,
+    transparent
+  );
+}
+.invitation[data-immersive="true"] .guest-notice {
+  position: absolute;
+  top: 76px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  background: rgb(251 246 239 / 0.94);
+  border-radius: 30px;
+  padding: 4px 12px;
+  font-size: 10px;
+}
+.immersive-cover.invitation-cover,
+.immersive-scene.scene-shell {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: none;
+  min-height: 100svh;
+  margin: 0;
+  overflow: clip;
+  background: linear-gradient(var(--world-sky) 0 70%, var(--world-ground) 70%);
+}
+.immersive-cover .cover-art,
+.immersive-scene .scene-visual {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  overflow: hidden;
+}
+.immersive-cover .cover-art > svg,
+.immersive-scene .scene-visual > svg,
+.immersive-scene .scene-visual > [data-immersive="true"] {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 78%;
+  height: 100%;
+  max-height: none;
+}
+.immersive-scene [data-immersive="true"] > svg {
+  height: 100%;
+  width: 100%;
+}
+.immersive-cover::before,
+.immersive-scene::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    var(--world-paper) 0%,
+    color-mix(in srgb, var(--world-paper) 93%, transparent) 20%,
+    color-mix(in srgb, var(--world-paper) 50%, transparent) 37%,
+    transparent 57%
+  );
+}
+.immersive-cover.invitation-cover {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 30px;
+  padding: 145px 5vw 105px 8vw;
+}
+.immersive-cover .cover-top {
+  text-align: left;
+  align-items: flex-start;
+  padding: 0;
+  width: min(38vw, 550px);
+}
+.immersive-cover .cover-top h1 {
+  font-size: clamp(60px, 7vw, 112px);
+  line-height: 1;
+  margin-block: 22px;
+  overflow-wrap: anywhere;
+}
+.immersive-cover .cover-top p {
+  max-width: 35ch;
+}
+.immersive-cover .cover-top .ornament {
+  margin: 0;
+}
+.immersive-cover .cover-actions {
+  justify-content: flex-start;
+  margin: 0;
+  flex-wrap: wrap;
+  max-width: 450px;
+}
+.immersive-scene.scene-shell {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  padding: 120px 4vw 22px;
+  gap: 12px;
+}
+.immersive-scene .scene-top {
+  grid-row: 1;
+  margin: 0;
+  justify-content: flex-start;
+  gap: 20px;
+}
+.immersive-scene .scene-top > a {
+  margin-left: auto;
+  background: rgb(251 246 239 / 0.92);
+}
+.immersive-scene .scene-body {
+  display: contents;
+}
+.immersive-scene .scene-copy {
+  grid-row: 2;
+  align-self: center;
+  width: min(32vw, 450px);
+  margin-left: 3vw;
+  gap: 18px;
+  padding: 24px 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.immersive-scene .scene-copy h1 {
+  font-size: clamp(38px, 4.5vw, 70px);
+  line-height: 1.06;
+}
+.immersive-scene .scene-copy p {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #57424b;
+}
+.immersive-scene .scene-copy .scene-event-meta {
+  gap: 5px;
+}
+.immersive-scene .scene-copy .photo-strip {
+  flex-wrap: wrap;
+}
+.immersive-scene .scene-copy .photo-strip img {
+  width: 90px;
+  height: 105px;
+}
+.immersive-scene .scene-navigation {
+  grid-row: 3;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  z-index: 4;
+}
+.immersive-scene
+  .scene-navigation
+  [data-slot="button"][data-variant="outline"] {
+  background: var(--world-paper);
+}
+.immersive-scene .scene-chapters {
+  grid-row: 4;
+  margin: 0 auto;
+  max-width: 100%;
+  padding: 10px 4px 4px;
+  z-index: 4;
+  scrollbar-width: thin;
+}
+.immersive-scene .scene-chapters [data-slot="button"] {
+  background: var(--world-paper);
+  color: var(--invite-accent);
+  border: 1px solid color-mix(in srgb, var(--invite-accent) 30%, transparent);
+}
+.immersive-scene .scene-chapters [aria-current="step"] {
+  background: var(--invite-accent);
+  color: #fff8ed;
+  border-color: var(--invite-accent);
+}
+.invitation-atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.canopy {
+  position: absolute;
+  width: clamp(120px, 18vw, 290px);
+  height: 85%;
+  top: -4%;
+  opacity: 0.85;
+  transform-origin: top left;
+  animation: canopy-sway 9s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+}
+.canopy-left {
+  left: -6%;
+}
+.canopy-right {
+  right: -6%;
+  scale: -1 1;
+  animation-delay: -4s;
+}
+.canopy-blossom {
+  transform-box: fill-box;
+  transform-origin: center;
+  /* Flowers move with the canopy, without separate per-flower timelines. */
+}
+.ambient-petal {
+  position: absolute;
+  top: -20px;
+  width: 9px;
+  height: 15px;
+  border-radius: 80% 10% 80% 20%;
+  background: #ba617a;
+  opacity: 0;
+  animation: ambient-fall 12s linear infinite;
+}
+.ambient-petal:nth-child(3n) {
+  background: #d7a24c;
+  width: 7px;
+  height: 12px;
+}
+.hanging-lights {
+  position: absolute;
+  inset: 70px 0 auto;
+  width: 100%;
+  height: 100px;
+  opacity: 0.8;
+}
+.hanging-lights {
+  animation: lamp-glow 4s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+}
+.invitation[data-motion-paused="true"] .invitation-atmosphere * {
+  animation-play-state: paused !important;
+}
+@keyframes canopy-sway {
+  0%,
+  100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+}
+@keyframes blossom-turn {
+  0%,
+  100% {
+    transform: rotate(-8deg);
+  }
+  50% {
+    transform: rotate(9deg);
+  }
+}
+@keyframes ambient-fall {
+  0% {
+    opacity: 0;
+    transform: translate(0, -20px) rotate(0);
+  }
+  12%,
+  80% {
+    opacity: 0.65;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--petal-drift), 105svh) rotate(320deg);
+  }
+}
+@keyframes lamp-glow {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 760px) {
+  .invitation[data-immersive="true"] .guest-toolbar {
+    padding: 12px 16px 28px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .invitation[data-immersive="true"] .guest-brand {
+    font-size: 22px;
+  }
+  .invitation[data-immersive="true"] .guest-tools {
+    gap: 0;
+  }
+  .invitation[data-immersive="true"] .guest-tools [data-slot="button"] {
+    padding-inline: 8px;
+  }
+  .invitation[data-immersive="true"] .guest-notice {
+    top: 94px;
+    font-size: 9px;
+  }
+  .immersive-cover.invitation-cover {
+    padding: 144px 24px 24px;
+    justify-content: space-between;
+    align-items: center;
+    gap: 34svh;
+  }
+  .immersive-cover .cover-top {
+    width: 100%;
+    text-align: center;
+    align-items: center;
+  }
+  .immersive-cover .cover-top h1 {
+    font-size: clamp(45px, 12vw, 72px);
+    margin-block: 10px;
+  }
+  .immersive-cover .cover-top p {
+    font-size: 12px;
+    margin-inline: auto;
+  }
+  .immersive-cover .cover-top .ornament {
+    width: 75px;
+    margin-inline: auto;
+  }
+  .immersive-cover .cover-actions {
+    width: 100%;
+    max-width: 400px;
+    gap: 8px;
+  }
+  .immersive-cover .cover-actions [data-slot="button"] {
+    height: 42px;
+  }
+  .immersive-cover .cover-art > svg,
+  .immersive-scene .scene-visual > svg,
+  .immersive-scene .scene-visual > [data-immersive="true"] {
+    inset: auto auto 7% 50%;
+    transform: translateX(-50%);
+    width: 145%;
+    height: 66%;
+  }
+  .immersive-cover::before,
+  .immersive-scene::before {
+    background: linear-gradient(
+      180deg,
+      var(--world-paper) 0%,
+      color-mix(in srgb, var(--world-paper) 97%, transparent) 23%,
+      color-mix(in srgb, var(--world-paper) 65%, transparent) 36%,
+      transparent 50%,
+      transparent 80%,
+      var(--world-ground) 97%
+    );
+  }
+  .immersive-scene.scene-shell {
+    padding: 126px 20px 14px;
+    gap: 6px;
+    grid-template-rows: auto minmax(440px, 1fr) auto auto;
+  }
+  .immersive-scene .scene-top {
+    gap: 10px;
+  }
+  .immersive-scene .scene-top .small-note {
+    font-size: 10px;
+  }
+  .immersive-scene .scene-top > a {
+    display: none;
+  }
+  .immersive-scene .scene-copy {
+    width: 100%;
+    align-self: start;
+    margin: 0;
+    gap: 8px;
+    padding: 10px 14px;
+    max-height: 225px;
+    overflow-y: auto;
+    text-align: center;
+    align-items: center;
+    scrollbar-width: thin;
+  }
+  .immersive-scene .scene-copy .ornament {
+    display: none;
+  }
+  .immersive-scene .scene-copy h1 {
+    font-size: clamp(30px, 8.2vw, 42px);
+  }
+  .immersive-scene .scene-copy p {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .immersive-scene .scene-event-meta {
+    font-size: 12px;
+  }
+  .immersive-scene .scene-event-meta p {
+    display: none;
+  }
+  .immersive-scene .scene-copy [data-slot="button"] {
+    min-height: 32px;
+    height: auto;
+    font-size: 11px;
+    padding-block: 6px;
+  }
+  .immersive-scene .scene-navigation [data-slot="button"] {
+    height: 40px;
+  }
+  .immersive-scene .scene-chapters {
+    width: 100%;
+    padding-top: 5px;
+  }
+  .immersive-scene .scene-chapters [data-slot="button"] {
+    font-size: 11px;
+  }
+  .canopy {
+    width: 135px;
+    height: 72%;
+    top: 19%;
+    opacity: 0.7;
+  }
+  .canopy-left {
+    left: -72px;
+  }
+  .canopy-right {
+    right: -72px;
+  }
+  .hanging-lights {
+    top: 108px;
+    height: 50px;
+    opacity: 0.6;
+  }
+}
+@media (max-height: 650px) and (min-width: 761px) {
+  .immersive-scene.scene-shell {
+    padding-top: 110px;
+  }
+  .immersive-scene .scene-copy {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  .immersive-scene .scene-copy h1 {
+    font-size: 36px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .invitation-atmosphere * {
+    animation: none !important;
+  }
+  .ambient-petal {
+    display: none;
+  }
+}
+
+/* Chapter motion lives in the silk curtain, leaving the detailed artwork unsnapshotted. */
+.immersive-scene .scene-copy.scene-enter {
+  animation: none;
+}
+.invitation-atmosphere[data-sleeping="true"] * {
+  animation-play-state: paused !important;
+}
+.immersive-scene .scene-copy {
+  max-height: calc(100svh - 300px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+.immersive-cover .cover-actions {
+  padding: 0;
+}
+.immersive-scene .scene-navigation {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (hover: hover) and (pointer: fine) {
+  .immersive-scene .scene-chapters [data-slot="button"]:hover {
+    background: var(--invite-accent);
+    color: #fff8ed;
+  }
+}
+@media (max-width: 760px) {
+  .immersive-scene .scene-copy {
+    max-height: 225px;
+  }
+  .immersive-scene .ceremony-cast {
+    transform-origin: 350px 380px;
+    transform: scale(0.78);
+  }
+}
+
+/* Feather the artwork itself, so its rectangular SVG edge never shows through. */
+@media (min-width: 761px) {
+  .immersive-cover .cover-art > svg,
+  .immersive-scene .scene-visual > svg,
+  .immersive-scene
+    .scene-visual
+    > [data-immersive="true"]
+    > .animated-courtyard:first-child {
+    mask-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgb(0 0 0 / 0.12) 8%,
+      rgb(0 0 0 / 0.65) 20%,
+      #000 34%
+    );
+  }
+}
+.dress-sparkle {
+  animation: sequin-shimmer 3.8s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+}
+@keyframes sequin-shimmer {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dress-sparkle {
+    animation: none;
+  }
+}
+
+/* Keep the decorative environment on stable composited surfaces. */
+.canopy,
+.hanging-lights,
+.ambient-petal {
+  will-change: transform, opacity;
+}
+.immersive-cover .cover-art,
+.immersive-scene .scene-visual {
+  contain: layout paint;
+}
+
+/* Small character surfaces isolate arm repaints from the full-screen SVG. */
+.character-sprite {
+  width: 96px;
+  height: 160px;
+  transform-origin: 50% 92%;
+  will-change: transform;
+}
+.character-sprite > svg {
+  width: 96px !important;
+  height: 160px !important;
+}
+.character-sprite .character-body {
+  animation: none;
+}
+.sprite-dance {
+  animation: sprite-dance 1.8s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+}
+@keyframes sprite-dance {
+  0%,
+  100% {
+    transform: translate(-8px, 0) rotate(-5deg);
+  }
+  25% {
+    transform: translate(0, -9px) rotate(0);
+  }
+  50% {
+    transform: translate(8px, 0) rotate(5deg);
+  }
+  75% {
+    transform: translate(0, -6px) rotate(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .character-sprite {
+    animation: none !important;
+  }
+}
+
+.canopy > svg,
+.hanging-lights > svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* A single composited silk panel turns each chapter without fading the scene. */
+.invitation-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  visibility: hidden;
+  transform: translateX(-101%);
+  background: #571d32;
+  border-right: 7px solid #c69b57;
+  box-shadow: 8px 0 0 #f3dfb7;
+}
+.invitation-curtain::before {
+  content: "";
+  position: absolute;
+  inset: 22px;
+  border: 1px solid rgb(228 186 119 / 0.6);
+  background: repeating-linear-gradient(
+    45deg,
+    transparent 0 34px,
+    rgb(228 186 119 / 0.07) 35px 36px
+  );
+}
+.invitation-curtain span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 84px;
+  height: 84px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  border: 1px solid #d7ad6d;
+  border-radius: 38% 0;
+}
+.invitation-curtain span::after {
+  content: "✺";
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  color: #f3dfb7;
+  font-size: 42px;
+  transform: rotate(-45deg);
+}
+.invitation[data-scene-turn] .invitation-curtain {
+  visibility: visible;
+}
+.invitation[data-scene-turn="cover"] .invitation-curtain {
+  animation: silk-cover 180ms var(--ease-out) both;
+}
+.invitation[data-scene-turn="reveal"] .invitation-curtain {
+  transform: translateX(0);
+  animation: silk-reveal 260ms var(--ease-in-out) both;
+}
+@keyframes silk-cover {
+  from {
+    transform: translateX(-101%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes silk-reveal {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(101%);
+  }
+}
+
+/* The cover borrows its framing from an Indian printed wedding card. */
+.immersive-cover.invitation-cover::after {
+  content: "";
+  position: absolute;
+  inset: 94px 22px 22px;
+  z-index: -1;
+  pointer-events: none;
+  border: 1px solid rgb(160 105 49 / 0.55);
+  outline: 1px solid rgb(160 105 49 / 0.28);
+  outline-offset: -9px;
+}
+.immersive-cover .cover-top {
+  position: relative;
+}
+.immersive-cover .cover-top .invitation-seal {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  color: #8b5132;
+  border: 1px solid #b48b54;
+  border-radius: 50%;
+  font-size: 29px;
+  line-height: 1;
+}
+.immersive-cover .cover-top .invitation-blessing {
+  color: #754624;
+  font-family: var(--font-heading);
+  font-size: 22px;
+  letter-spacing: 0.03em;
+}
+.invitation[data-immersive="true"] .cover-actions [data-slot="button"],
+.invitation[data-immersive="true"] .scene-navigation [data-slot="button"],
+.invitation[data-immersive="true"] .scene-chapters [data-slot="button"],
+.invitation[data-immersive="true"] .scene-copy [data-slot="button"] {
+  min-height: 48px;
+  padding-inline: 23px;
+  border-radius: 3px;
+  border: 1px solid #a97f48;
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  box-shadow:
+    inset 0 0 0 2px rgb(255 247 226 / 0.45),
+    0 3px 0 rgb(84 47 28 / 0.12);
+  transition:
+    transform 140ms var(--ease-out),
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+.invitation[data-immersive="true"] .scene-chapters [data-slot="button"] {
+  min-height: 40px;
+  padding-inline: 17px;
+  font-size: 15px;
+}
+.invitation[data-immersive="true"]
+  [data-slot="button"][data-variant="default"] {
+  background: #62233a;
+  color: #fff4dc;
+  border-color: #a77a48;
+}
+.invitation[data-immersive="true"]
+  [data-slot="button"][data-variant="outline"] {
+  background: #fff8eb;
+  color: #62233a;
+}
+@media (hover: hover) and (pointer: fine) {
+  .invitation[data-immersive="true"] .cover-actions [data-slot="button"]:hover,
+  .invitation[data-immersive="true"]
+    .scene-navigation
+    [data-slot="button"]:hover,
+  .invitation[data-immersive="true"] .scene-copy [data-slot="button"]:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 0 0 2px rgb(255 247 226 / 0.45),
+      0 5px 0 rgb(84 47 28 / 0.18);
+  }
+}
+@media (max-width: 760px) {
+  .immersive-cover.invitation-cover::after {
+    inset: 118px 10px 10px;
+  }
+  .immersive-cover.invitation-cover::before {
+    background: linear-gradient(
+      180deg,
+      var(--world-paper) 0%,
+      color-mix(in srgb, var(--world-paper) 96%, transparent) 34%,
+      color-mix(in srgb, var(--world-paper) 76%, transparent) 48%,
+      transparent 64%,
+      transparent 80%,
+      var(--world-ground) 97%
+    );
+  }
+  .immersive-cover .cover-top .invitation-seal {
+    width: 42px;
+    height: 42px;
+    font-size: 23px;
+  }
+  .immersive-cover .cover-top .invitation-blessing {
+    font-size: 18px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .invitation-curtain {
+    display: none;
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "profile": "Chromium, 1280x720, 4x CPU slowdown, 4 seconds Sangeet",
+  "results": [
+    {
+      "label": "baseline",
+      "frames": 31,
+      "p95ms": 250,
+      "over33ms": 31,
+      "animations": 230,
+      "taskMs": 2136.7,
+      "layoutMs": 57.4,
+      "styleMs": 476
+    },
+    {
+      "label": "no-micro-motion",
+      "frames": 31,
+      "p95ms": 266.7,
+      "over33ms": 31,
+      "animations": 60,
+      "taskMs": 1567,
+      "layoutMs": 47.4,
+      "styleMs": 266.7
+    },
+    {
+      "label": "no-mask",
+      "frames": 27,
+      "p95ms": 299.9,
+      "over33ms": 27,
+      "animations": 230,
+      "taskMs": 2255.8,
+      "layoutMs": 50,
+      "styleMs": 479.3
+    },
+    {
+      "label": "no-atmosphere",
+      "frames": 40,
+      "p95ms": 250.1,
+      "over33ms": 40,
+      "animations": 179,
+      "taskMs": 1852.5,
+      "layoutMs": 49.5,
+      "styleMs": 419.4
+    }
+  ]
+}

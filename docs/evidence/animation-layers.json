@@ -1,0 +1,65 @@
+{
+  "profile": "Chromium, 1280x720, 4x CPU slowdown, 4 seconds Sangeet",
+  "results": [
+    {
+      "label": "baseline",
+      "frames": 27,
+      "p95ms": 250,
+      "over33ms": 27,
+      "animations": 230,
+      "taskMs": 1959.6,
+      "layoutMs": 29.8,
+      "styleMs": 520.2
+    },
+    {
+      "label": "no-micro-motion",
+      "frames": 35,
+      "p95ms": 200,
+      "over33ms": 35,
+      "animations": 60,
+      "taskMs": 1072.6,
+      "layoutMs": 47.9,
+      "styleMs": 182.7
+    },
+    {
+      "label": "no-mask",
+      "frames": 33,
+      "p95ms": 200,
+      "over33ms": 33,
+      "animations": 230,
+      "taskMs": 2048,
+      "layoutMs": 47.9,
+      "styleMs": 582.8
+    },
+    {
+      "label": "no-atmosphere",
+      "frames": 34,
+      "p95ms": 250,
+      "over33ms": 34,
+      "animations": 179,
+      "taskMs": 1652,
+      "layoutMs": 47.6,
+      "styleMs": 403.4
+    },
+    {
+      "label": "promoted",
+      "frames": 28,
+      "p95ms": 250.1,
+      "over33ms": 28,
+      "animations": 230,
+      "taskMs": 2618.1,
+      "layoutMs": 38.9,
+      "styleMs": 656.7
+    },
+    {
+      "label": "paused",
+      "frames": 201,
+      "p95ms": 33.3,
+      "over33ms": 9,
+      "animations": 230,
+      "taskMs": 1545.3,
+      "layoutMs": 5.1,
+      "styleMs": 415.8
+    }
+  ]
+}

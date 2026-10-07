@@ -1,0 +1,9 @@
+.next-assistance/
+.local/
+playwright-report/
+test-results/
+coverage/
+*.tsbuildinfo
+docs/
+tests/
+.env*

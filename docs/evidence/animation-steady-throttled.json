@@ -1,0 +1,15 @@
+{
+  "profile": "Chromium, 1280x720, 4x CPU slowdown, 4 seconds Sangeet after warmup",
+  "results": [
+    {
+      "label": "steady-throttled",
+      "frames": 136,
+      "p95ms": 50,
+      "over33ms": 12,
+      "animations": 70,
+      "taskMs": 1862.7,
+      "layoutMs": 62.7,
+      "styleMs": 496.1
+    }
+  ]
+}
