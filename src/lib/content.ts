@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { characterOptions, outfitOptions } from "./appearance";
+import { musicTracks } from "./music";
 
 export const languages = ["en", "gu"] as const;
 export type Language = (typeof languages)[number];
@@ -109,7 +110,7 @@ export const contentSchema = z
         .min(0)
         .max(outfitOptions.length - 1),
     ]),
-    music: z.enum(["none", "courtyard", "garden"]),
+    music: z.enum(["none", ...musicTracks]),
     photos: z
       .array(z.string().uuid())
       .max(5)

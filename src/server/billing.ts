@@ -47,6 +47,14 @@ export async function createOrder(
   weddingId: string,
   version: number,
 ) {
+  if (
+    env().PAYMENT_ADAPTER === "razorpay" &&
+    (!env().RAZORPAY_KEY_ID || !env().RAZORPAY_KEY_SECRET)
+  )
+    throw new AppError(
+      503,
+      "Checkout is not available yet. Your draft is safe.",
+    );
   const order = await db().transaction(async (tx) => {
     const [w] = await tx
       .select()
@@ -81,13 +89,11 @@ export async function createOrder(
       payload: { orderId: row.id },
       dueAt: new Date(Date.now() + 60000),
     });
-    await tx
-      .insert(analytics)
-      .values({
-        key: `checkout:${row.id}`,
-        weddingId,
-        kind: "checkout_started",
-      });
+    await tx.insert(analytics).values({
+      key: `checkout:${row.id}`,
+      weddingId,
+      kind: "checkout_started",
+    });
     return { ...row, existing: false };
   });
   if (order.existing || order.providerOrderId) return order;

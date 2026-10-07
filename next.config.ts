@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 const config: NextConfig = {
   poweredByHeader: false,
+  skipProxyUrlNormalize: true,
   distDir: process.env.NEXT_DIST_DIR || ".next",
   serverExternalPackages: ["pg", "sharp"],
   async headers() {

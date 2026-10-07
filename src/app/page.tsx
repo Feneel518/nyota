@@ -7,6 +7,10 @@ import {
   Leaf,
   MousePointer2,
   Sparkles,
+  Music2,
+  Users,
+  QrCode,
+  MapPin,
 } from "lucide-react";
 import { Courtyard, Ornament } from "@/components/illustration";
 import { SiteFooter, SiteHeader } from "@/components/site";
@@ -20,6 +24,9 @@ import {
 import { themes, themeNames } from "@/lib/content";
 import { themeDescriptions } from "@/lib/appearance";
 import { env } from "@/server/env";
+import { WeddingMotif } from "@/components/wedding-motif";
+import { Badge } from "@/components/ui/badge";
+export const metadata = { alternates: { canonical: "https://www.nyotaa.app" } };
 export default function Home() {
   const price = new Intl.NumberFormat("en-IN", {
     style: "currency",
@@ -35,8 +42,8 @@ export default function Home() {
             <div className="hero-copy">
               <h1>A wedding invitation worth exploring.</h1>
               <p>
-                Your story. Your celebrations. A little world of your own,
-                shared in one beautiful link.
+                From the first Haldi to the last dance. Bring your traditions,
+                your music, and your favourite people together with Nyota.
               </p>
               <div className="hero-actions">
                 <Button size="lg" variant="secondary" asChild>
@@ -91,6 +98,127 @@ export default function Home() {
           ))}
         </div>
       </div>
+      <section
+        id="features"
+        className="container-wide section-pad nyota-features"
+      >
+        <div className="section-heading">
+          <h2>
+            All the little details.
+            <br />
+            One beautiful Nyota.
+          </h2>
+          <p>
+            An invitation your family will love opening. A guest list you will
+            love managing.
+          </p>
+        </div>
+        <div className="feature-showcase">
+          <article className="showcase-ceremonies">
+            <div>
+              <h3>Every tradition gets its moment.</h3>
+              <p>
+                Haldi, Mehendi, Sangeet, the wedding, and everything in between.
+                Give each celebration its own time, place, and personality.
+              </p>
+            </div>
+            <div className="mini-ceremonies" aria-hidden="true">
+              {(["haldi", "mehendi", "sangeet"] as const).map((kind) => (
+                <div data-kind={kind} key={kind}>
+                  <WeddingMotif kind={kind} />
+                  <span>
+                    {kind === "haldi"
+                      ? "Haldi"
+                      : kind === "mehendi"
+                        ? "Mehendi"
+                        : "Sangeet"}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <Link href="/demo#details" className="feature-text-link">
+              Explore the invitation <ArrowUpRight size={16} />
+            </Link>
+          </article>
+          <article className="showcase-guests">
+            <Users aria-hidden="true" />
+            <h3>
+              Less chasing.
+              <br />
+              More celebrating.
+            </h3>
+            <p>
+              Private family RSVPs, a headcount for each event, and an export
+              for your wedding planner.
+            </p>
+            <div
+              className="sample-guest-list"
+              aria-label="Example guest responses"
+            >
+              <div>
+                <span>Patel family</span>
+                <Badge variant="secondary">Attending · 4</Badge>
+              </div>
+              <div>
+                <span>Shah family</span>
+                <Badge variant="secondary">Attending · 3</Badge>
+              </div>
+              <div>
+                <span>Mehta family</span>
+                <Badge variant="outline">Declined</Badge>
+              </div>
+              <small>Illustrative guest list</small>
+            </div>
+          </article>
+          <article className="showcase-language">
+            <Languages aria-hidden="true" />
+            <h3>
+              Feels like home.
+              <br />
+              In both languages.
+            </h3>
+            <div className="language-sample">
+              <span>You’re warmly invited</span>
+              <span lang="gu">આપનું હાર્દિક સ્વાગત છે</span>
+            </div>
+            <p>
+              English and Gujarati, with ready-to-personalise wording and
+              translation assistance.
+            </p>
+          </article>
+          <article className="showcase-music">
+            <Music2 aria-hidden="true" />
+            <h3>Set the mood.</h3>
+            <div className="soundwave" aria-hidden="true">
+              {[16, 30, 42, 25, 48, 36, 22, 40, 52, 28, 38, 18, 32, 44, 24].map(
+                (height, i) => (
+                  <span key={i} style={{ height }} />
+                ),
+              )}
+            </div>
+            <p>
+              Six original instrumentals. A gentle melody or a festive beat,
+              played when your guests choose.
+            </p>
+            <span className="music-track-caption">
+              Shaadi morning / Sitar serenade / Sangeet
+            </span>
+          </article>
+          <article className="showcase-share">
+            <QrCode aria-hidden="true" />
+            <h3>One link. Everyone invited.</h3>
+            <p>
+              Share on WhatsApp, send a QR code, or copy your invitation link.
+              Guests can RSVP without signing up.
+            </p>
+            <div className="sample-link">www.nyotaa.app/w/your-celebration</div>
+            <div className="share-detail">
+              <MapPin size={15} />
+              <span>Venue directions included</span>
+            </div>
+          </article>
+        </div>
+      </section>
       <section className="container-wide section-pad" id="experience">
         <div className="section-heading">
           <h2>
@@ -195,7 +323,8 @@ export default function Home() {
               "English and Gujarati, included",
               "Up to ten events with directions",
               "Private RSVPs, event counts, and CSV export",
-              "A permanent link, QR code, and edits during hosting",
+              "Six original music tracks to set the mood",
+              "A shareable link, QR code, and edits during hosting",
             ].map((t) => (
               <li key={t}>
                 <Check aria-hidden="true" />
@@ -238,7 +367,7 @@ export default function Home() {
             ],
             [
               "Do you translate our invitation automatically?",
-              "No. You enter your own English and Gujarati wording. If a translation is missing, guests see the wording in your default language.",
+              "You can write in English and Gujarati, start with our wording templates, or use translation assistance. Review the wording before publishing. Missing translations fall back to your invitation’s default language.",
             ],
           ].map(([q, a], i) => (
             <AccordionItem value={String(i)} key={q}>

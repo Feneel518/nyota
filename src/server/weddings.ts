@@ -6,6 +6,8 @@ import {
   type InvitationContent,
 } from "@/lib/content";
 import { isActive } from "@/lib/domain";
+import { invitationSlugError } from "@/lib/invitation-url";
+import { env } from "./env";
 import { db, type Transaction } from "./db";
 import {
   assets,
@@ -90,6 +92,28 @@ export async function getDraft(ownerId: string, id: string) {
   if (!draft) throw new AppError(404, "Draft not found.");
   return { wedding, content: draft.content };
 }
+function domainError(slug: string) {
+  const error = invitationSlugError(slug);
+  if (error) return error;
+  const { APP_URL, INVITATION_DOMAIN } = env();
+  return INVITATION_DOMAIN &&
+    `${slug}.${INVITATION_DOMAIN}` === new URL(APP_URL).hostname
+    ? "This domain name is reserved. Choose another."
+    : "";
+}
+export async function checkDomain(ownerId: string, id: string, slug: string) {
+  const wedding = await ownerWedding(ownerId, id);
+  if (wedding.slug === slug) return { available: true, current: true };
+  const error = domainError(slug);
+  if (error) return { available: false, error };
+  const [collision] = await db()
+    .select({ id: weddings.id })
+    .from(weddings)
+    .where(eq(weddings.slug, slug));
+  return collision
+    ? { available: false, error: "That link is already taken. Choose another." }
+    : { available: true, current: false };
+}
 export async function saveDraft(
   ownerId: string,
   id: string,
@@ -100,123 +124,130 @@ export async function saveDraft(
 ) {
   const content = contentSchema.parse(raw);
   const requestHash = hash(JSON.stringify({ content, slug, version }));
-  if (
-    !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) ||
-    slug.length < 3 ||
-    slug.length > 70
-  )
-    throw new AppError(
-      400,
-      "Use 3–70 lowercase letters, numbers, or hyphens for your link.",
-    );
-  return db().transaction(async (tx) => {
-    const [w] = await tx
-      .select()
-      .from(weddings)
-      .where(and(eq(weddings.id, id), eq(weddings.ownerId, ownerId)))
-      .for("update");
-    if (!w || w.purgedAt) throw new AppError(404, "Invitation not found.");
-    if (w.expiresAt && !isActive(w.expiresAt))
-      throw new AppError(
-        410,
-        "This invitation has expired. Responses remain available during the export period.",
-      );
-    const scope = `draft:${id}`;
-    const [prior] = await tx
-      .select()
-      .from(idempotency)
-      .where(and(eq(idempotency.scope, scope), eq(idempotency.key, mutation)));
-    if (prior) {
-      if (prior.requestHash !== requestHash)
+  return db()
+    .transaction(async (tx) => {
+      const [w] = await tx
+        .select()
+        .from(weddings)
+        .where(and(eq(weddings.id, id), eq(weddings.ownerId, ownerId)))
+        .for("update");
+      if (!w || w.purgedAt) throw new AppError(404, "Invitation not found.");
+      if (w.expiresAt && !isActive(w.expiresAt))
+        throw new AppError(
+          410,
+          "This invitation has expired. Responses remain available during the export period.",
+        );
+      const scope = `draft:${id}`;
+      const [prior] = await tx
+        .select()
+        .from(idempotency)
+        .where(
+          and(eq(idempotency.scope, scope), eq(idempotency.key, mutation)),
+        );
+      if (prior) {
+        if (prior.requestHash !== requestHash)
+          throw new AppError(
+            409,
+            "This save identifier was already used for different changes.",
+          );
+        return prior.result as { version: number };
+      }
+      if (w.version !== version)
         throw new AppError(
           409,
-          "This save identifier was already used for different changes.",
+          "Another tab saved a newer version. Your changes are still here. Review the saved version before replacing them.",
         );
-      return prior.result as { version: number };
-    }
-    if (w.version !== version)
-      throw new AppError(
-        409,
-        "Another tab saved a newer version. Your changes are still here. Review the saved version before replacing them.",
-      );
-    const [order] = await tx
-      .select()
-      .from(orders)
-      .where(eq(orders.weddingId, id));
-    if ((order || w.firstPublishedAt) && w.slug !== slug)
-      throw new AppError(
-        409,
-        "Your link is reserved and can no longer be changed.",
-      );
-    const [collision] = await tx
-      .select({ id: weddings.id })
-      .from(weddings)
-      .where(eq(weddings.slug, slug));
-    if (collision && collision.id !== id)
-      throw new AppError(409, "That link is already taken. Choose another.");
-    const [previous] = await tx
-      .select()
-      .from(drafts)
-      .where(eq(drafts.weddingId, id));
-    if (!previous) throw new AppError(404, "Draft not found.");
-    const ownedPhotos = await tx
-      .select()
-      .from(assets)
-      .where(eq(assets.weddingId, id));
-    if (
-      content.photos.some(
-        (photo) =>
-          !ownedPhotos.some(
-            (a) =>
-              a.id === photo &&
-              a.ownerId === ownerId &&
-              ["ready", "retained"].includes(a.status),
-          ),
+      if (w.slug !== slug) {
+        const error = domainError(slug);
+        if (error) throw new AppError(422, error);
+      }
+      const [collision] = await tx
+        .select({ id: weddings.id })
+        .from(weddings)
+        .where(eq(weddings.slug, slug));
+      if (collision && collision.id !== id)
+        throw new AppError(422, "That link is already taken. Choose another.");
+      const [previous] = await tx
+        .select()
+        .from(drafts)
+        .where(eq(drafts.weddingId, id));
+      if (!previous) throw new AppError(404, "Draft not found.");
+      const ownedPhotos = await tx
+        .select()
+        .from(assets)
+        .where(eq(assets.weddingId, id));
+      if (
+        content.photos.some(
+          (photo) =>
+            !ownedPhotos.some(
+              (a) =>
+                a.id === photo &&
+                a.ownerId === ownerId &&
+                ["ready", "retained"].includes(a.status),
+            ),
+        )
       )
-    )
-      throw new AppError(400, "Choose only your completed photos.");
-    const removed = previous.content.photos.filter(
-      (photo) => !content.photos.includes(photo),
-    );
-    const activePhotos = ownedPhotos.filter(
-      (a) =>
-        ["pending", "processing"].includes(a.status) ||
-        content.photos.includes(a.id) ||
-        (a.status === "ready" && !removed.includes(a.id)),
-    );
-    if (activePhotos.length > 5)
-      throw new AppError(
-        400,
-        "Keep up to five photos, including uploads in progress.",
+        throw new AppError(400, "Choose only your completed photos.");
+      const removed = previous.content.photos.filter(
+        (photo) => !content.photos.includes(photo),
       );
-    if (removed.length)
-      await tx
-        .update(assets)
-        .set({ status: "retained" })
-        .where(and(eq(assets.weddingId, id), inArray(assets.id, removed)));
-    if (content.photos.length)
-      await tx
-        .update(assets)
-        .set({ status: "ready" })
-        .where(
-          and(eq(assets.weddingId, id), inArray(assets.id, content.photos)),
+      const activePhotos = ownedPhotos.filter(
+        (a) =>
+          ["pending", "processing"].includes(a.status) ||
+          content.photos.includes(a.id) ||
+          (a.status === "ready" && !removed.includes(a.id)),
+      );
+      if (activePhotos.length > 5)
+        throw new AppError(
+          400,
+          "Keep up to five photos, including uploads in progress.",
         );
-    await tx.update(drafts).set({ content }).where(eq(drafts.weddingId, id));
-    await syncEvents(tx, id, content);
-    await tx
-      .update(weddings)
-      .set({ version: version + 1, updatedAt: new Date(), slug })
-      .where(eq(weddings.id, id));
-    const result = { version: version + 1 };
-    await tx.insert(idempotency).values({
-      scope,
-      key: mutation,
-      requestHash,
-      result,
-      expiresAt: new Date(Date.now() + 7 * 86400000),
+      if (removed.length)
+        await tx
+          .update(assets)
+          .set({ status: "retained" })
+          .where(and(eq(assets.weddingId, id), inArray(assets.id, removed)));
+      if (content.photos.length)
+        await tx
+          .update(assets)
+          .set({ status: "ready" })
+          .where(
+            and(eq(assets.weddingId, id), inArray(assets.id, content.photos)),
+          );
+      await tx.update(drafts).set({ content }).where(eq(drafts.weddingId, id));
+      await syncEvents(tx, id, content);
+      await tx
+        .update(weddings)
+        .set({ version: version + 1, updatedAt: new Date(), slug })
+        .where(eq(weddings.id, id));
+      const result = { version: version + 1 };
+      await tx.insert(idempotency).values({
+        scope,
+        key: mutation,
+        requestHash,
+        result,
+        expiresAt: new Date(Date.now() + 7 * 86400000),
+      });
+      return result;
+    })
+    .catch((error: unknown) => {
+      // The unique constraint settles simultaneous claims after both checks pass.
+      let cause = error;
+      while (cause && typeof cause === "object") {
+        if (
+          "code" in cause &&
+          cause.code === "23505" &&
+          "constraint" in cause &&
+          cause.constraint === "weddings_slug_unique"
+        )
+          throw new AppError(
+            422,
+            "That link is already taken. Choose another.",
+          );
+        cause = "cause" in cause ? cause.cause : undefined;
+      }
+      throw error;
     });
-    return result;
-  });
 }
 export async function prepareRevision(
   tx: Transaction,

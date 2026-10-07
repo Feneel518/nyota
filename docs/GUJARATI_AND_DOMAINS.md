@@ -20,7 +20,11 @@ INVITATION_DOMAIN=yourdomain.com
 3. Add the environment variables above to the Vercel project and redeploy.
 4. Set the invitation’s link name to `feneelnidharmi` in Review, then publish it.
 
-The public URL, QR code, sharing, publication email, and social preview use the couple subdomain. `/details` and `/social` open on the same subdomain. RSVP and analytics accept only the matching invitation origin; owner APIs continue to require the main app origin. The main app hostname is never rewritten as an invitation.
+The public URL, QR code, sharing, publication email, and social preview use the couple subdomain. `/details`, `/social`, and private RSVP editing open on the same subdomain. RSVP and analytics accept only the matching invitation origin; owner APIs continue to require the main app origin. The main app hostname is never rewritten as an invitation.
+
+In Review, entering a domain checks its availability. Choose **Save domain** to apply it. Names use 3–63 lowercase letters, numbers, or single hyphens between words; infrastructure names such as `www`, `api`, and `admin` are reserved. Availability is checked again when saving, and concurrent claims are protected by the database unique constraint. An unavailable name does not block editing the other steps.
+
+Domains remain editable after an abandoned checkout and after payment. Changing a published domain takes effect immediately, preserves the invitation, responses, and hosting dates, and releases the old name. Previously shared links and QR codes must be replaced. The checkout order and its content snapshot remain unchanged; later content edits can be published once the invitation is live.
 
 An owned domain is needed for wildcard couple subdomains. A generated Vercel deployment URL can host the app with the existing `/w/<slug>` links until the custom domain is connected. `INVITATION_DOMAIN` must be a hostname without `https://`, a port, or `*.`. You can use a separate suffix such as `invitations.yourdomain.com` if that wildcard is connected to the project.
 

@@ -14,14 +14,24 @@ export function OwnerLanguage({
   children: React.ReactNode;
 }) {
   const [language, setLanguage] = useState(initial);
-  const isPreview = usePathname().endsWith("/preview");
+  const pathname = usePathname();
+  const isPreview = pathname.endsWith("/preview");
   const t = useCallback(
     (text: string) => (language === "gu" ? ownerGujarati[text] || text : text),
     [language],
   );
   return (
     <UiLanguage.Provider value={{ language, t }}>
-      <div lang={language}>
+      <div
+        lang={language}
+        data-owner-surface={
+          pathname === "/sign-in/verify"
+            ? "auth-verify"
+            : pathname.startsWith("/sign-in")
+              ? "auth"
+              : "workspace"
+        }
+      >
         {!isPreview && (
           <div className="owner-language-bar">
             <span>

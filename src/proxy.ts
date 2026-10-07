@@ -20,7 +20,8 @@ export function proxy(request: NextRequest) {
   requestHeaders.set("x-invitation-host", hostname);
   if (request.nextUrl.pathname.startsWith("/w/"))
     return NextResponse.next({ request: { headers: requestHeaders } });
-  const url = request.nextUrl.clone();
+  // Preserve the server's original origin so this stays an internal rewrite.
+  const url = new URL(request.url);
   url.pathname = `/w/${slug}${url.pathname === "/" ? "" : url.pathname}`;
   return NextResponse.rewrite(url, { request: { headers: requestHeaders } });
 }

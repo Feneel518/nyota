@@ -3,7 +3,7 @@ import { useUiLanguage } from "@/components/owner-language";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Mail } from "lucide-react";
+import { Mail, ShieldCheck, LoaderCircle } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import {
@@ -59,6 +59,9 @@ export function SignInForm({
   }
   return (
     <div className="auth-form">
+      <div className="auth-form-icon" aria-hidden="true">
+        {sent ? <Mail /> : <ShieldCheck />}
+      </div>
       <h1>{sent ? t("Check your inbox.") : t("Your story starts here.")}</h1>
       <p>
         {sent
@@ -71,7 +74,7 @@ export function SignInForm({
       </p>
       <form onSubmit={submit}>
         <FieldGroup>
-          <Field>
+          <Field data-invalid={!!error}>
             <FieldLabel htmlFor="email">{t("Email address")}</FieldLabel>
             <Input
               id="email"
@@ -82,6 +85,7 @@ export function SignInForm({
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               maxLength={254}
+              aria-invalid={!!error}
             />
             <FieldDescription>
               {t("Your drafts and guest responses stay private.")}
@@ -101,7 +105,11 @@ export function SignInForm({
                 : sent
                   ? t("Resend sign-in link")
                   : t("Email me a sign-in link")}
-            <Mail data-icon="inline-end" />
+            {busy ? (
+              <LoaderCircle className="animate-spin" data-icon="inline-end" />
+            ) : (
+              <Mail data-icon="inline-end" />
+            )}
           </Button>
         </FieldGroup>
       </form>

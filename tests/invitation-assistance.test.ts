@@ -17,9 +17,12 @@ import {
 import { checkOrigin } from "../src/server/security";
 import { env } from "../src/server/env";
 import * as environment from "../src/server/env";
+import { NextRequest } from "next/server";
+import { proxy } from "../src/proxy";
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  vi.unstubAllEnvs();
   vi.restoreAllMocks();
 });
 
@@ -129,6 +132,37 @@ describe("Gujarati assistance", () => {
 });
 
 describe("Invitation subdomains", () => {
+  it("keeps rewrites internal while forwarding the validated subdomain and strips spoofed markers", () => {
+    vi.stubEnv("APP_URL", "http://127.0.0.1:3001");
+    vi.stubEnv("INVITATION_DOMAIN", "localhost");
+    vi.stubEnv("__NEXT_NO_MIDDLEWARE_URL_NORMALIZE", "true");
+    const rewritten = proxy(
+      new NextRequest("http://127.0.0.1:3001/details", {
+        headers: {
+          host: "our-wedding.localhost:3001",
+          "x-invitation-host": "spoofed.localhost",
+        },
+      }),
+    );
+    expect(rewritten.headers.get("x-middleware-rewrite")).toBe(
+      "http://127.0.0.1:3001/w/our-wedding/details",
+    );
+    expect(
+      rewritten.headers.get("x-middleware-request-x-invitation-host"),
+    ).toBe("our-wedding.localhost");
+    const main = proxy(
+      new NextRequest("http://127.0.0.1:3001/w/our-wedding", {
+        headers: {
+          host: "127.0.0.1:3001",
+          "x-invitation-host": "our-wedding.localhost",
+        },
+      }),
+    );
+    expect(
+      main.headers.get("x-middleware-request-x-invitation-host"),
+    ).toBeNull();
+    expect(main.headers.get("x-middleware-rewrite")).toBeNull();
+  });
   it("uses the configured wildcard domain and keeps path links when none is configured", () => {
     expect(
       invitationUrl("https://www.yourdomain.com", "www", "yourdomain.com"),

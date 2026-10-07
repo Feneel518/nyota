@@ -16,7 +16,7 @@ function createAuth() {
   if (!e.BETTER_AUTH_SECRET)
     throw new Error("Configure BETTER_AUTH_SECRET with pnpm setup:local.");
   return betterAuth({
-    appName: "Wedding Adventure",
+    appName: "Nyota",
     baseURL: e.APP_URL,
     secret: e.BETTER_AUTH_SECRET,
     database: drizzleAdapter(db(), { provider: "pg", schema }),
@@ -36,7 +36,7 @@ function createAuth() {
             landing.searchParams.set(key, value);
           await sendEmail(
             email,
-            "Your Wedding Adventure sign-in link",
+            "Your Nyota sign-in link",
             `Open this link to sign in. It expires in 10 minutes and works once.\n\n${landing}\n\nIf you did not request this, you can ignore it.`,
           );
         },

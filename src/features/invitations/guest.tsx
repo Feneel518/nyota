@@ -9,6 +9,7 @@ import {
   Volume2,
   VolumeX,
   MapPin,
+  Clock3,
   Pause,
   Play,
 } from "lucide-react";
@@ -18,6 +19,8 @@ import {
   type Language,
   eventDate,
   localizedText,
+  eventCeremony,
+  ceremonyNames,
 } from "@/lib/content";
 import { messages } from "@/content/messages";
 import { Courtyard, Ornament } from "@/components/illustration";
@@ -30,6 +33,8 @@ import { Atmosphere } from "./atmosphere";
 import "./immersive.css";
 import { useSceneTransition } from "./use-scene-transition";
 import { FamilyBlessings } from "./family-blessings";
+import { WeddingMotif } from "@/components/wedding-motif";
+import { brand } from "@/lib/brand";
 export function Guest({
   content,
   slug = "demo",
@@ -51,6 +56,7 @@ export function Guest({
   const [motionPaused, setMotionPaused] = useState(false);
   const { transitionScene, sceneTurn } = useSceneTransition(motionPaused);
   const stopMusic = useRef<(() => void) | null>(null);
+  const musicGeneration = useRef(0);
   const visit = useRef("");
   const t = messages[language];
   const publicPath = invitationPath || `/w/${slug}`;
@@ -75,13 +81,17 @@ export function Guest({
   }, [slug, mode]);
   useEffect(
     () => () => {
+      musicGeneration.current++;
       stopMusic.current?.();
+      stopMusic.current = null;
+      setSound(false);
     },
-    [],
+    [content.music],
   );
   useEffect(() => {
     const hide = () => {
       if (document.hidden) {
+        musicGeneration.current++;
         stopMusic.current?.();
         stopMusic.current = null;
         setSound(false);
@@ -91,19 +101,26 @@ export function Guest({
     return () => document.removeEventListener("visibilitychange", hide);
   }, []);
   async function toggleSound() {
-    if (stopMusic.current) {
-      stopMusic.current();
+    if (sound) {
+      musicGeneration.current++;
+      stopMusic.current?.();
       stopMusic.current = null;
       setSound(false);
       return;
     }
     if (content.music === "none") return;
+    const generation = ++musicGeneration.current;
+    setSound(true);
     try {
       const { playMusic } = await import("./music");
-      stopMusic.current = playMusic(content.music);
-      setSound(true);
+      const stop = await playMusic(content.music);
+      if (generation !== musicGeneration.current) stop();
+      else stopMusic.current = stop;
     } catch {
-      toast.error(t.soundUnavailable);
+      if (generation === musicGeneration.current) {
+        setSound(false);
+        toast.error(t.soundUnavailable);
+      }
     }
   }
   const mainEvent = content.events.find((e) => e.id === content.mainEventId);
@@ -271,7 +288,10 @@ export function Guest({
         )}
         <section id="details" className="guest-details">
           <div className="details-intro">
-            <Ornament className="w-28 text-muted-foreground" />
+            <WeddingMotif className="details-motif" kind="wedding" />
+            <p className="details-blessing">
+              {language === "gu" ? "શુભ વિવાહ" : "Shubh Vivah"}
+            </p>
             {detailsOnly ? (
               <h1 className="couple-names">
                 {text(content.names[0])} & {text(content.names[1])}
@@ -279,8 +299,19 @@ export function Guest({
             ) : (
               <h2>{t.invited}</h2>
             )}
+            {!detailsOnly && (
+              <p className="details-couple">
+                {text(content.names[0])} <span>&</span> {text(content.names[1])}
+              </p>
+            )}
             <p>{text(content.wording) || text(content.welcome)}</p>
             <FamilyBlessings content={content} language={language} />
+            {mainEvent?.start && (
+              <p className="details-date">
+                {eventDate(mainEvent.start, language, false)}
+              </p>
+            )}
+            <Ornament className="details-divider" />
             {detailsOnly && (
               <Button variant="outline" asChild>
                 <Link href={publicPath}>
@@ -289,6 +320,18 @@ export function Guest({
                 </Link>
               </Button>
             )}
+          </div>
+          <div className="celebrations-heading">
+            <h2>
+              {language === "gu"
+                ? "આપણી ઉજવણી"
+                : "A celebration in every colour"}
+            </h2>
+            <p>
+              {language === "gu"
+                ? "દરેક પ્રસંગે આપની હાજરીની પ્રતીક્ષા."
+                : "Join us for the moments that become memories."}
+            </p>
           </div>
           <EventList content={content} language={language} />
           {content.hosts
@@ -319,7 +362,7 @@ export function Guest({
         </section>
       </main>
       <footer className="guest-attribution">
-        <Link href="/">Made with Wedding Adventure</Link>
+        <a href={brand.url}>Made with Nyota</a>
       </footer>
     </div>
   );
@@ -335,26 +378,44 @@ export function EventList({
     text = (v: { en: string; gu: string }) =>
       localizedText(v, language, content.defaultLanguage);
   return (
-    <div>
+    <div className="ceremony-cards">
       {content.events
         .filter((e) => !e.archived)
         .map((e) => (
-          <article className="event-row" key={e.id}>
-            <time dateTime={e.start ? `${e.start}+05:30` : undefined}>
-              {eventDate(e.start, language)}
-              <span className="block small-note">Asia/Kolkata</span>
-            </time>
+          <article
+            className="ceremony-card"
+            data-card-ceremony={eventCeremony(e)}
+            key={e.id}
+          >
+            <div className="ceremony-card-art">
+              <WeddingMotif kind={eventCeremony(e)} />
+              <span>{ceremonyNames[eventCeremony(e)][language]}</span>
+            </div>
             <div className="event-info">
               <h3>{text(e.title) || t.noEvents}</h3>
-              <strong>{text(e.venue)}</strong>
-              <p>{text(e.address)}</p>
+              <time
+                className="ceremony-date"
+                dateTime={e.start ? `${e.start}+05:30` : undefined}
+              >
+                <Clock3 aria-hidden="true" />
+                {eventDate(e.start, language)}
+              </time>
+              <div className="ceremony-venue">
+                <MapPin aria-hidden="true" />
+                <div>
+                  <strong>{text(e.venue)}</strong>
+                  <p>{text(e.address)}</p>
+                </div>
+              </div>
               {e.end && (
                 <p>
                   {language === "gu" ? "સમાપ્તિ" : "Until"}:{" "}
                   {eventDate(e.end, language)}
                 </p>
               )}
-              <p>{text(e.notes)}</p>
+              {text(e.notes) && (
+                <p className="ceremony-note">{text(e.notes)}</p>
+              )}
               {e.directions && (
                 <Button variant="outline" asChild>
                   <a

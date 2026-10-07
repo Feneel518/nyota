@@ -35,6 +35,10 @@ async function signIn(page: Page, email: string) {
     .getByRole("button", { name: "Continue to my invitations" })
     .click();
   await expect(page).toHaveURL(/\/dashboard$/);
+  await page.screenshot({
+    path: "docs/screenshots/nyota-dashboard.png",
+    fullPage: true,
+  });
   return link;
 }
 test("marketing, themes, Gujarati, scene navigation, and mobile accessibility", async ({
@@ -149,6 +153,26 @@ test("real magic link → persisted draft → local verified publication → RSV
   await expect(
     page.getByRole("heading", { name: "Make it feel like you." }),
   ).toBeVisible();
+  for (const track of [
+    "Courtyard melody",
+    "Garden at dusk",
+    "Shaadi morning",
+    "Sitar serenade",
+    "Mehendi afternoon",
+    "Sangeet under the stars",
+  ]) {
+    await page.getByRole("combobox", { name: "Music", exact: true }).click();
+    await page.getByRole("option", { name: track, exact: true }).click();
+    await page
+      .getByRole("button", { name: "Preview music", exact: true })
+      .click();
+    await expect(
+      page.getByRole("button", { name: "Stop preview", exact: true }),
+    ).toBeVisible();
+    await page
+      .getByRole("button", { name: "Stop preview", exact: true })
+      .click();
+  }
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   await expect(page.getByText("Ready for your final preview")).toBeVisible();
   await page.evaluate(() => window.scrollTo(0, 0));
@@ -213,6 +237,11 @@ test("real magic link → persisted draft → local verified publication → RSV
     fullPage: true,
   });
   await page.goto(`/dashboard/${weddingId}/responses`);
+  await page.getByRole("radio", { name: "Declined", exact: true }).click();
+  await expect(
+    page.getByText("No matching families", { exact: true }),
+  ).toBeVisible();
+  await page.getByRole("radio", { name: "Attending", exact: true }).click();
   await expect(
     page.getByRole("cell", { name: "Patel family", exact: true }),
   ).toBeVisible();
@@ -223,6 +252,27 @@ test("real magic link → persisted draft → local verified publication → RSV
     path: "docs/screenshots/responses.png",
     fullPage: true,
   });
+  expect(
+    (await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze())
+      .violations,
+  ).toEqual([]);
+  await page
+    .getByRole("button", { name: "Delete response from Patel family" })
+    .click();
+  await expect(page.getByRole("alertdialog")).toBeVisible();
+  await page.getByRole("button", { name: "Keep response" }).click();
+  await expect(page.getByRole("alertdialog")).not.toBeVisible();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.screenshot({
+    path: "docs/screenshots/nyota-responses-mobile.png",
+    fullPage: true,
+  });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.setViewportSize({ width: 1280, height: 720 });
   const exportResponse = await page.request.get(
     `/api/weddings/${weddingId}/export`,
   );

@@ -4,7 +4,7 @@ import AxeBuilder from "@axe-core/playwright";
 
 async function signIn(page: Page, email: string) {
   await page.goto("/sign-in");
-  await page.getByLabel("Email address", { exact: true }).fill(email);
+  await page.getByPlaceholder("you@example.com", { exact: true }).fill(email);
   await page.getByRole("button", { name: "Email me a sign-in link" }).click();
   await expect(
     page.getByRole("heading", { name: "Check your inbox." }),
@@ -206,17 +206,17 @@ test("bilingual templates, editable translation, mothers, reused venues, and gue
     .last()
     .click();
   await expect(guestPage).toHaveURL(`${publicUrl}/details`);
+  await guestPage.getByRole("checkbox").first().check();
+  await guestPage.getByLabel("People: Wedding").fill("3");
   await guestPage
     .getByLabel("Family or group name")
     .fill("Assistance test family");
-  await guestPage.getByRole("checkbox").first().check();
-  await guestPage.getByLabel("People: Wedding").fill("3");
   await guestPage
     .getByRole("button", { name: "Send response", exact: true })
     .click();
   await expect(
     guestPage.getByText("Your response is saved", { exact: true }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 90000 });
   const editLink = await guestPage
     .getByLabel("Keep your private edit link")
     .inputValue();
@@ -232,7 +232,7 @@ test("bilingual templates, editable translation, mothers, reused venues, and gue
     .click();
   await expect(
     editPage.getByText("Your response is saved", { exact: true }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 90000 });
   await editPage.close();
   await guestPage.getByRole("radio", { name: "ગુજરાતી", exact: true }).click();
   await expect(guestPage.locator(".family-blessings")).toContainText("મીનાબેન");

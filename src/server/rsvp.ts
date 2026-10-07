@@ -186,10 +186,12 @@ export async function ownerResponses(
   search = "",
   page = 1,
   exportAll = false,
+  status: "all" | "attending" | "declined" = "all",
 ) {
   await ownerWedding(ownerId, weddingId);
   const filter = and(
     eq(rsvps.weddingId, weddingId),
+    status === "all" ? undefined : eq(rsvps.attending, status === "attending"),
     search
       ? ilike(
           rsvps.family,

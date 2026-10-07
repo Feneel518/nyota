@@ -10,6 +10,7 @@ import {
   ownerWedding,
   publishUpdates,
   saveDraft,
+  checkDomain,
 } from "@/server/weddings";
 import {
   createOrder,
@@ -41,6 +42,12 @@ export async function GET(req: Request, ctx: Context) {
     const user = await requireUser();
     await ownerWedding(user.id, id);
     const url = new URL(req.url);
+    if (action === "domain") {
+      await rateLimitRequest(req, "owner:domain", 90, user.id);
+      return response(
+        await checkDomain(user.id, id, url.searchParams.get("slug") || ""),
+      );
+    }
     if (action === "draft") return response(await getDraft(user.id, id));
     if (action === "assets")
       return response(
@@ -59,6 +66,10 @@ export async function GET(req: Request, ctx: Context) {
             1,
             Math.min(10000, Number(url.searchParams.get("page")) || 1),
           ),
+          false,
+          z
+            .enum(["all", "attending", "declined"])
+            .parse(url.searchParams.get("status") || "all"),
         ),
       );
     if (action === "export") {

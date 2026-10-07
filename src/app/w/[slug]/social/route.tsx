@@ -72,7 +72,7 @@ export async function GET(
         <div style={{ fontSize: 32, marginTop: 36 }}>
           {date ? eventDate(date, language, false) : ""}
         </div>
-        <div style={{ fontSize: 20, marginTop: 40 }}>Wedding Adventure</div>
+        <div style={{ fontSize: 20, marginTop: 40 }}>Nyota</div>
       </div>
     </div>,
     {

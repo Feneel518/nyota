@@ -1,6 +1,7 @@
 node_modules/
 .next/
 .next-assistance/
+.next-domain/
 .env*
 !.env.example
 .local/

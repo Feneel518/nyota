@@ -1,6 +1,61 @@
 // Interface copy is separate from optional invitation translation assistance.
 // A native Gujarati editorial review remains a launch requirement.
 export const ownerGujarati: Record<string, string> = {
+  "Save domain": "ડોમેન સાચવો",
+  "Keep current domain": "હાલનું ડોમેન રાખો",
+  "Check again": "ફરી તપાસો",
+  "Your domain is saved.": "તમારું ડોમેન સાચવાયું છે.",
+  "This domain is available.": "આ ડોમેન ઉપલબ્ધ છે.",
+  "Checking domain availability…": "ડોમેનની ઉપલબ્ધતા તપાસી રહ્યા છીએ…",
+  "This domain name is reserved. Choose another.":
+    "આ ડોમેન નામ અનામત છે. બીજું પસંદ કરો.",
+  "That link is already taken. Choose another.":
+    "આ લિંક પહેલેથી ઉપયોગમાં છે. બીજી પસંદ કરો.",
+  "Use 3–63 lowercase letters, numbers, or single hyphens between words.":
+    "૩–૬૩ અંગ્રેજી નાના અક્ષરો, અંકો અથવા શબ્દો વચ્ચે એક હાઇફન વાપરો.",
+  "Could not check availability. Please try again.":
+    "ઉપલબ્ધતા તપાસી શકાઈ નથી. ફરી પ્રયાસ કરો.",
+  "Your domain was not saved. Check the save message above and try again.":
+    "તમારું ડોમેન સાચવાયું નથી. ઉપરનો સંદેશ તપાસો અને ફરી પ્રયાસ કરો.",
+  "You can change your domain before or after payment. Save your domain before continuing to checkout.":
+    "તમે ચુકવણી પહેલાં કે પછી ડોમેન બદલી શકો છો. ચુકવણી તરફ આગળ વધતાં પહેલાં ડોમેન સાચવો.",
+  "Saving a new domain changes your live link immediately. The old link will stop working; update shared links and download a new QR code.":
+    "નવું ડોમેન સાચવતાં તમારી જાહેર લિંક તરત બદલાય છે. જૂની લિંક કામ કરવાનું બંધ કરશે; શેર કરેલી લિંક્સ બદલો અને નવો QR કોડ ડાઉનલોડ કરો.",
+  "Shaadi morning": "લગ્નની સવાર",
+  "Sitar serenade": "સિતારના સૂર",
+  "Mehendi afternoon": "મહેંદીની બપોર",
+  "Sangeet under the stars": "તારલાં નીચે સંગીત",
+  "Preview music": "સંગીત સાંભળો",
+  "Stop preview": "સંગીત બંધ કરો",
+  "Music could not play. Please try again.":
+    "સંગીત ચાલુ થઈ શક્યું નહીં. ફરી પ્રયત્ન કરો.",
+  "Six original instrumental tracks. Guests choose when to turn sound on.":
+    "છ મૌલિક વાદ્ય ધૂનો. મહેમાનો પોતાની ઇચ્છાથી સંગીત ચાલુ કરી શકે છે.",
+  Invitations: "આમંત્રણો",
+  "Live celebrations": "પ્રકાશિત ઉજવણીઓ",
+  "Drafts to make your own": "અધૂરાં આમંત્રણો",
+  "A little inspiration?": "થોડી પ્રેરણા જોઈએ?",
+  "Explore six invitation styles, made for the way you celebrate.":
+    "તમારી ઉજવણીને અનુરૂપ છ આમંત્રણ શૈલીઓ જુઓ.",
+  "Secure checkout": "સુરક્ષિત ચુકવણી",
+  "Together with our families": "અમારા પરિવાર સાથે",
+  "All six invitation themes": "બધી છ આમંત્રણ થીમ",
+  "English & Gujarati": "અંગ્રેજી અને ગુજરાતી",
+  "Six original music tracks": "છ મૌલિક સંગીત ધૂનો",
+  "Private RSVPs & guest export": "ખાનગી પ્રતિસાદ અને મહેમાનોની યાદી",
+  "Shareable link & QR code": "શેર કરી શકાય તેવી લિંક અને QR કોડ",
+  "Payments secured by Razorpay": "Razorpay દ્વારા સુરક્ષિત ચુકવણી",
+  "Your guest book": "તમારા મહેમાનોની યાદી",
+  "Every response, all in one place.": "બધા પ્રતિસાદ, એક જ જગ્યાએ.",
+  "Celebration headcounts": "પ્રસંગ પ્રમાણે મહેમાનો",
+  "Guest responses": "મહેમાનોના પ્રતિસાદ",
+  families: "પરિવારો",
+  responses: "પ્રતિસાદ",
+  "Filter responses": "પ્રતિસાદ ફિલ્ટર કરો",
+  "All responses": "બધા પ્રતિસાદ",
+  "Updating responses…": "પ્રતિસાદ અપડેટ થઈ રહ્યા છે…",
+  "Try another name or change the attendance filter.":
+    "બીજું નામ શોધો અથવા હાજરીનું ફિલ્ટર બદલો.",
   "Browse 6 templates": "૬ તૈયાર લખાણ જુઓ",
   "Family line templates": "પરિવાર માટે તૈયાર લખાણ",
   "Invitation wording templates": "આમંત્રણ માટે તૈયાર લખાણ",
@@ -193,7 +248,6 @@ export const ownerGujarati: Record<string, string> = {
   "A few details still need you": "થોડી વિગતો બાકી છે",
   "Ready for your final preview": "અંતિમ પૂર્વાવલોકન માટે તૈયાર",
   "celebrations ·": "પ્રસંગો ·",
-  "English & Gujarati": "અંગ્રેજી અને ગુજરાતી",
   "No photos added. Your invitation will use the original illustrated couple.":
     "ફોટા ઉમેર્યા નથી. આમંત્રણમાં ચિત્રિત યુગલ દેખાશે.",
   "Untranslated names or event details use your default language. Review both languages in the preview.":

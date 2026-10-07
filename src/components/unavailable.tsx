@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Ornament } from "./illustration";
 import { Button } from "./ui/button";
+import { brand } from "@/lib/brand";
 export function Unavailable() {
   return (
     <main id="main" className="prose-page items-center text-center">
@@ -11,7 +12,7 @@ export function Unavailable() {
         check with your hosts.
       </p>
       <Button variant="outline" asChild>
-        <Link href="/">Wedding Adventure</Link>
+        <Link href={brand.url}>Nyota</Link>
       </Button>
     </main>
   );

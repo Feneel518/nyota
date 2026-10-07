@@ -10,6 +10,7 @@ export function useAutosave(
 ) {
   const [content, setContent] = useState(initial),
     [slug, setSlug] = useState(initialSlug),
+    [savedSlug, setSavedSlug] = useState(initialSlug),
     [status, setStatus] = useState("Saved"),
     [error, setError] = useState("");
   const version = useRef(initialVersion),
@@ -33,6 +34,7 @@ export function useAutosave(
       if (blocked.current) return false;
       if (saved.current === JSON.stringify(latest.current)) {
         setStatus("Saved");
+        setError("");
         return true;
       }
       const task = async () => {
@@ -50,6 +52,7 @@ export function useAutosave(
             request,
           );
           version.current = result.version;
+          setSavedSlug(request.slug);
           saved.current = JSON.stringify({
             content: request.content,
             slug: request.slug,
@@ -62,6 +65,16 @@ export function useAutosave(
           );
           return true;
         } catch (e) {
+          // These requests were rejected without saving. Corrected input must
+          // not keep replaying the rejected mutation or become a tab conflict.
+          if (e instanceof ApiError && [400, 422].includes(e.status)) {
+            pending.current = null;
+            latest.current = {
+              ...latest.current,
+              slug: JSON.parse(saved.current).slug,
+            };
+            setSlug(latest.current.slug);
+          }
           if (e instanceof ApiError && e.status === 409) blocked.current = true;
           setStatus(
             e instanceof ApiError && e.status === 409
@@ -120,6 +133,7 @@ export function useAutosave(
       latest.current = remote;
       setContent(remote.content);
       setSlug(remote.slug);
+      setSavedSlug(remote.slug);
       setStatus("Saved");
     } else {
       void flush();
@@ -128,6 +142,7 @@ export function useAutosave(
   return {
     content,
     slug,
+    savedSlug,
     update,
     updateSlug,
     status,

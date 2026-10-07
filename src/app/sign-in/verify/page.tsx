@@ -1,5 +1,6 @@
 import { safeReturn } from "@/lib/domain";
 import { VerifyForm } from "@/features/weddings/auth-form";
+import { Brand } from "@/components/site";
 export const metadata = {
   title: "Confirm sign-in",
   robots: { index: false, follow: false },
@@ -12,7 +13,10 @@ export default async function Verify({
 }) {
   const q = await searchParams;
   return (
-    <main id="main" className="auth-main min-h-svh">
+    <main id="main" className="auth-main verify-main">
+      <div className="verify-brand">
+        <Brand />
+      </div>
       <VerifyForm
         token={q.token || ""}
         callbackURL={safeReturn(q.callbackURL || null)}

@@ -1,6 +1,34 @@
 import type { InvitationContent } from "./content";
 
 const hostnameSlug = /^[a-z0-9](?:[a-z0-9-]{1,61}[a-z0-9])$/;
+const reservedSlugs = new Set([
+  "www",
+  "app",
+  "api",
+  "admin",
+  "dashboard",
+  "sign-in",
+  "auth",
+  "mail",
+  "email",
+  "smtp",
+  "support",
+  "help",
+  "status",
+  "cdn",
+  "assets",
+]);
+export function invitationSlugError(slug: string) {
+  if (
+    slug.length < 3 ||
+    slug.length > 63 ||
+    !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)
+  )
+    return "Use 3–63 lowercase letters, numbers, or single hyphens between words.";
+  if (reservedSlugs.has(slug))
+    return "This domain name is reserved. Choose another.";
+  return "";
+}
 export function invitationSlug(hostname: string, domain?: string) {
   if (!domain) return null;
   const suffix = `.${domain.toLowerCase()}`;

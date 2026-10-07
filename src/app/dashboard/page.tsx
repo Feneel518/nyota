@@ -3,7 +3,8 @@ import { OwnerText } from "@/components/owner-language";
 import { currentUser } from "@/server/auth";
 import { listWeddings } from "@/server/weddings";
 import { Brand } from "@/components/site";
-import { Courtyard } from "@/components/illustration";
+import { WeddingMotif } from "@/components/wedding-motif";
+import { ArrowUpRight, CalendarDays, Heart, Mail } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -22,19 +23,19 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { NewWedding, SignOut } from "@/features/weddings/dashboard";
-import { eventDate } from "@/lib/content";
+import { eventDate, themeNames } from "@/lib/content";
 export const metadata = { title: "Your invitations" };
 export default async function Dashboard() {
   const user = (await currentUser())!;
   const rows = await listWeddings(user.id);
   return (
-    <div className="workspace">
+    <div className="workspace nyota-dashboard">
       <header className="workspace-header">
         <Brand />
         <SignOut />
       </header>
       <main id="main">
-        <div className="page-heading">
+        <div className="page-heading dashboard-welcome">
           <div>
             <h1>
               <OwnerText>Your celebrations.</OwnerText>
@@ -47,9 +48,38 @@ export default async function Dashboard() {
             </p>
           </div>
           <NewWedding />
+          <WeddingMotif className="dashboard-welcome-art" />
+        </div>
+        <div className="dashboard-overview">
+          {[
+            { Icon: Mail, value: rows.length, label: "Invitations" },
+            {
+              Icon: Heart,
+              value: rows.filter(
+                ({ wedding: w }) =>
+                  w.firstPublishedAt && w.expiresAt && w.expiresAt > new Date(),
+              ).length,
+              label: "Live celebrations",
+            },
+            {
+              Icon: CalendarDays,
+              value: rows.filter(({ wedding: w }) => !w.firstPublishedAt)
+                .length,
+              label: "Drafts to make your own",
+            },
+          ].map(({ Icon, value, label }) => (
+            <div key={label}>
+              <Icon aria-hidden="true" />
+              <strong>{value}</strong>
+              <span>
+                <OwnerText>{label}</OwnerText>
+              </span>
+            </div>
+          ))}
         </div>
         {!rows.length ? (
           <Empty className="min-h-96">
+            <WeddingMotif className="dashboard-empty-motif" kind="wedding" />
             <EmptyHeader>
               <EmptyTitle>
                 <OwnerText>Your next chapter, beautifully invited.</OwnerText>
@@ -78,7 +108,7 @@ export default async function Dashboard() {
                 .map((n) => n[c.defaultLanguage] || "Your name")
                 .join(" & ");
               return (
-                <Card key={w.id}>
+                <Card key={w.id} className="dashboard-invitation-card">
                   <CardHeader>
                     <div className="flex items-center justify-between gap-3">
                       <CardTitle>{name}</CardTitle>
@@ -108,12 +138,21 @@ export default async function Dashboard() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="wedding-card-art">
-                      <Courtyard
-                        theme={c.theme}
-                        characters={c.characters}
-                        outfits={c.outfits}
-                      />
+                    <div
+                      className="wedding-card-art invitation dashboard-card-stationery"
+                      data-theme={c.theme}
+                    >
+                      <WeddingMotif kind="wedding" />
+                      <p className="display">{name}</p>
+                      <p>
+                        {eventDate(
+                          c.events.find((e) => e.id === c.mainEventId)?.start ||
+                            "",
+                          c.defaultLanguage,
+                          false,
+                        )}
+                      </p>
+                      <span>{themeNames[c.theme]}</span>
                     </div>
                     {expired && (
                       <p className="small-note mt-3">
@@ -131,6 +170,7 @@ export default async function Dashboard() {
                               ? "Edit invitation"
                               : "Continue creating"}
                           </OwnerText>
+                          <ArrowUpRight data-icon="inline-end" />
                         </Link>
                       </Button>
                     )}
@@ -152,6 +192,24 @@ export default async function Dashboard() {
             })}
           </div>
         )}
+        <div className="dashboard-help">
+          <div>
+            <h2>
+              <OwnerText>A little inspiration?</OwnerText>
+            </h2>
+            <p>
+              <OwnerText>
+                Explore six invitation styles, made for the way you celebrate.
+              </OwnerText>
+            </p>
+          </div>
+          <Button variant="outline" asChild>
+            <Link href="/demo">
+              <OwnerText>Explore the demo</OwnerText>
+              <ArrowUpRight data-icon="inline-end" />
+            </Link>
+          </Button>
+        </div>
       </main>
     </div>
   );

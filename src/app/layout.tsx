@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import { Providers } from "@/components/providers";
 import "./globals.css";
+import { brand } from "@/lib/brand";
 export const metadata: Metadata = {
+  metadataBase: new URL(brand.url),
+  applicationName: brand.name,
   title: {
-    default: "Wedding Adventure — An invitation worth exploring",
-    template: "%s · Wedding Adventure",
+    default: "Nyota — Indian wedding invitations, made personal",
+    template: "%s · Nyota",
   },
-  description:
-    "Create a beautifully personal, interactive wedding invitation. Three illustrated worlds, English and Gujarati, and every celebration in one link.",
+  description: brand.description,
+  openGraph: { siteName: brand.name, type: "website", locale: "en_IN" },
 };
 export default function RootLayout({
   children,

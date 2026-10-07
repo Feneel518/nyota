@@ -68,7 +68,12 @@ import {
 import { WordingTemplates } from "./wording-templates";
 import { GujaratiAssistant } from "./gujarati-assistant";
 import { applyGujarati } from "@/lib/gujarati-translation";
-import { invitationUrl, suggestedCoupleSlug } from "@/lib/invitation-url";
+import { suggestedCoupleSlug } from "@/lib/invitation-url";
+import { DomainEditor } from "./domain-editor";
+import { musicTracks, musicLabels } from "@/lib/music";
+import { MusicPreview } from "./music-preview";
+import { BrandMark } from "@/components/site";
+import { Guest } from "@/features/invitations/guest";
 const stepNames = ["Couple", "Functions", "Appearance", "Review"];
 export function Editor({
   id,
@@ -90,6 +95,7 @@ export function Editor({
   const { t } = useUiLanguage();
 
   const state = useAutosave(id, initial, initialSlug, initialVersion);
+  const [domainDraft, setDomainDraft] = useState(initialSlug);
   const c = state.content;
   const [step, setStep] = useState(0),
     [language, setLanguage] = useState<Language>(c.defaultLanguage),
@@ -101,27 +107,22 @@ export function Editor({
     wedding: { version: number; slug: string };
   } | null>(null);
   const router = useRouter();
-  const frame = useRef<HTMLIFrameElement>(null),
-    mobileFrame = useRef<HTMLIFrameElement>(null);
+  const frame = useRef<HTMLIFrameElement>(null);
   const latest = useRef(c);
   const navigating = useRef(false);
   const [changingStep, setChangingStep] = useState(false);
   useEffect(() => {
     latest.current = c;
-    for (const el of [frame.current, mobileFrame.current])
-      el?.contentWindow?.postMessage(
-        { type: "invitation-preview", content: c },
-        location.origin,
-      );
+    frame.current?.contentWindow?.postMessage(
+      { type: "invitation-preview", content: c },
+      location.origin,
+    );
   }, [c, preview]);
   useEffect(() => {
     const receive = (e: MessageEvent) => {
       if (e.origin !== location.origin || e.data?.type !== "preview-ready")
         return;
-      if (
-        e.source === frame.current?.contentWindow ||
-        e.source === mobileFrame.current?.contentWindow
-      )
+      if (e.source === frame.current?.contentWindow)
         (e.source as Window).postMessage(
           { type: "invitation-preview", content: latest.current },
           location.origin,
@@ -150,7 +151,10 @@ export function Editor({
     navigating.current = true;
     setChangingStep(true);
     try {
-      if (await state.flush()) setStep(next);
+      await state.flush();
+      // Steps share the same in-memory draft. A failed save must not trap the
+      // owner on one step; leaving the editor still requires a successful save.
+      setStep(next);
     } finally {
       navigating.current = false;
       setChangingStep(false);
@@ -260,6 +264,10 @@ export function Editor({
     <>
       <header className="editor-header">
         <div className="editor-title">
+          <span className="editor-brand" aria-label="Nyota">
+            <BrandMark />
+            <span>nyota.</span>
+          </span>
           <Button
             variant="ghost"
             size="icon"
@@ -1073,20 +1081,20 @@ export function Editor({
                   <SelectContent>
                     <SelectGroup>
                       <SelectItem value="none">{t("No music")}</SelectItem>
-                      <SelectItem value="courtyard">
-                        {t("Courtyard melody")}
-                      </SelectItem>
-                      <SelectItem value="garden">
-                        {t("Garden at dusk")}
-                      </SelectItem>
+                      {musicTracks.map((track) => (
+                        <SelectItem key={track} value={track}>
+                          {t(musicLabels[track].name)}
+                        </SelectItem>
+                      ))}
                     </SelectGroup>
                   </SelectContent>
                 </Select>
                 <FieldDescription>
                   {t(
-                    "Original instrumental miniatures. Guests choose when to turn sound on.",
+                    "Six original instrumental tracks. Guests choose when to turn sound on.",
                   )}
                 </FieldDescription>
+                <MusicPreview key={c.music} track={c.music} />
               </Field>
               <Field>
                 <FieldLabel htmlFor="photos">
@@ -1169,43 +1177,21 @@ export function Editor({
           )}
           {step === 3 && (
             <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="slug">
-                  {t("Your invitation link")}
-                </FieldLabel>
-                <Input
-                  id="slug"
-                  value={state.slug}
-                  disabled={published}
-                  onChange={(e) =>
-                    state.updateSlug(
-                      e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""),
-                    )
-                  }
-                />
-                <FieldDescription>
-                  {invitationUrl(
-                    invitationBaseUrl,
-                    state.slug,
-                    invitationDomain,
-                  )}{" "}
-                  {t("· Your link locks at first checkout.")}
-                </FieldDescription>
-                {!published &&
-                  suggestedCoupleSlug(c.names) &&
-                  suggestedCoupleSlug(c.names) !== state.slug && (
-                    <Button
-                      className="self-start"
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        state.updateSlug(suggestedCoupleSlug(c.names))
-                      }
-                    >
-                      {t("Use our names")}: {suggestedCoupleSlug(c.names)}
-                    </Button>
-                  )}
-              </Field>
+              <DomainEditor
+                id={id}
+                value={domainDraft}
+                savedSlug={state.savedSlug}
+                suggested={suggestedCoupleSlug(c.names)}
+                published={published}
+                baseUrl={invitationBaseUrl}
+                domain={invitationDomain}
+                onChange={setDomainDraft}
+                onSave={async (slug) => {
+                  if (!(await state.flush())) return false;
+                  state.updateSlug(slug);
+                  return state.flush();
+                }}
+              />
               {issues.length ? (
                 <Alert variant="destructive">
                   <AlertTitle>{t("A few details still need you")}</AlertTitle>
@@ -1263,7 +1249,9 @@ export function Editor({
                 {t("Preview the complete invitation")}
               </Button>
               <Button
-                disabled={busy || issues.length > 0}
+                disabled={
+                  busy || issues.length > 0 || domainDraft !== state.savedSlug
+                }
                 onClick={async () => {
                   setBusy(true);
                   try {
@@ -1338,12 +1326,12 @@ export function Editor({
               )}
             </DialogDescription>
           </DialogHeader>
-          <iframe
-            ref={mobileFrame}
-            src={`/dashboard/${id}/preview`}
-            title={t("Full invitation preview")}
-            className="w-full flex-1 min-h-0 border rounded-lg"
-          />
+          <div
+            className="full-invitation-preview"
+            aria-label={t("Full invitation preview")}
+          >
+            <Guest content={c} mode="preview" />
+          </div>
         </DialogContent>
       </Dialog>
       <Dialog
@@ -1389,6 +1377,7 @@ export function Editor({
                     content: conflict.content,
                     slug: conflict.wedding.slug,
                   });
+                  setDomainDraft(conflict.wedding.slug);
                   setConflict(null);
                 }}
               >

@@ -195,6 +195,28 @@ describe.skipIf(!enabled)("Transactional PostgreSQL journeys", () => {
     const totals = await ownerResponses(owner, weddingId);
     expect(totals.totals.responses).toBe(1);
     expect(totals.eventTotals[eventId]).toBe(2);
+    const attending = await ownerResponses(
+      owner,
+      weddingId,
+      "પટેલ",
+      1,
+      false,
+      "attending",
+    );
+    expect(attending.rows).toHaveLength(1);
+    expect(attending.total).toBe(1);
+    const declined = await ownerResponses(
+      owner,
+      weddingId,
+      "",
+      1,
+      false,
+      "declined",
+    );
+    expect(declined.rows).toHaveLength(0);
+    expect(declined.total).toBe(0);
+    expect(declined.totals).toEqual(totals.totals);
+    expect(declined.eventTotals).toEqual(totals.eventTotals);
     await expect(
       saveResponse(
         slug,
