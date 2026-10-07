@@ -100,7 +100,7 @@ export function Checkout({
   expectedExpiry: string;
   purgeAt: string | null;
 }) {
-  const { t } = useUiLanguage();
+  const { t, language } = useUiLanguage();
   const paymentActive = useRef(false);
 
   const [order, setOrder] = useState(initialOrder),
@@ -277,12 +277,16 @@ export function Checkout({
                   {t("Share your link and welcome your first responses.")}
                 </AlertDescription>
               </Alert>
-              <p>
-                {t("Hosting ends")}
-                <strong>{eventDate(expiry!)}</strong>{" "}
-                {t("(Asia/Kolkata). Export responses before")}
-                {eventDate(purge!)}.
-              </p>
+              <div className="checkout-expiry">
+                <span>{t("Hosting ends")}</span>
+                <strong>
+                  <time dateTime={expiry!}>{eventDate(expiry!, language)}</time>
+                </strong>
+                <span>IST · Asia/Kolkata</span>
+                <p>
+                  {t("Export responses before")} {eventDate(purge!, language)}.
+                </p>
+              </div>
               <Field>
                 <FieldLabel>{t("Public invitation")}</FieldLabel>
                 <a
@@ -323,18 +327,20 @@ export function Checkout({
                   </li>
                 ))}
               </ul>
-              <p>
-                {t(
-                  "Your reviewed invitation, all celebrations, English and Gujarati, private RSVPs, and a downloadable QR code.",
-                )}
-              </p>
-              <p className="small-note">
-                {t("Expected hosting end if published today:")}{" "}
-                {eventDate(expectedExpiry)}
-                {t(
-                  "(Asia/Kolkata). Your full six-month term starts at actual publication. Responses can be exported for another 30 days.",
-                )}
-              </p>
+              <div className="checkout-expiry">
+                <span>{t("Expected hosting end if published today:")}</span>
+                <strong>
+                  <time dateTime={expectedExpiry}>
+                    {eventDate(expectedExpiry, language)}
+                  </time>
+                </strong>
+                <span>IST · Asia/Kolkata</span>
+                <p>
+                  {t(
+                    "Your full six-month term starts at actual publication. Responses can be exported for another 30 days.",
+                  )}
+                </p>
+              </div>
               {content.events.some(
                 (e) =>
                   !e.archived &&

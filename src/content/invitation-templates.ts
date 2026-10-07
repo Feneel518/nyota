@@ -119,10 +119,13 @@ export const invitationTemplates: WordingTemplate[] = [
 ];
 
 export const functionSuggestions = [
+  { title: { en: "Grah Shanti", gu: "ગ્રહ શાંતિ" }, animation: "grah-shanti" },
   { title: { en: "Mandap Muhurat", gu: "મંડપ મુહૂર્ત" }, animation: "wedding" },
   { title: { en: "Haldi", gu: "હલ્દી" }, animation: "haldi" },
   { title: { en: "Mehendi", gu: "મહેંદી" }, animation: "mehendi" },
   { title: { en: "Sangeet", gu: "સંગીત સંધ્યા" }, animation: "sangeet" },
+  { title: { en: "Carnival", gu: "કાર્નિવલ" }, animation: "carnival" },
+  { title: { en: "Pool Party", gu: "પૂલ પાર્ટી" }, animation: "pool-party" },
   { title: { en: "Wedding", gu: "લગ્ન સમારંભ" }, animation: "wedding" },
   { title: { en: "Reception", gu: "સ્નેહ મિલન" }, animation: "celebration" },
 ] as const;

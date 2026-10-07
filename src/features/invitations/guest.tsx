@@ -218,8 +218,16 @@ export function Guest({
         </div>
       </header>
       {mode !== "public" && (
-        <div className="guest-notice">
-          {mode === "demo" ? t.demo : t.preview}
+        <div className={`guest-notice${mode === "demo" ? " demo-notice" : ""}`}>
+          <span>{mode === "demo" ? t.demo : t.preview}</span>
+          {mode === "demo" && (
+            <Link href="/sign-in" className="demo-create-link">
+              {language === "gu"
+                ? "તમારું આમંત્રણ બનાવો"
+                : "Create your invitation"}
+              <ArrowRight size={14} aria-hidden="true" />
+            </Link>
+          )}
         </div>
       )}
       {!detailsOnly && (
@@ -363,6 +371,21 @@ export function Guest({
       </main>
       <footer className="guest-attribution">
         <a href={brand.url}>Made with Nyota</a>
+        {mode !== "preview" && (
+          <a
+            className="invitation-referral"
+            href={
+              mode === "demo"
+                ? "/sign-in"
+                : `${brand.url}/?utm_source=invitation&utm_medium=referral&utm_campaign=guest_footer`
+            }
+          >
+            {language === "gu"
+              ? "તમારું આમંત્રણ બનાવો"
+              : "Create your wedding invitation"}
+            <ArrowRight size={14} aria-hidden="true" />
+          </a>
+        )}
       </footer>
     </div>
   );

@@ -16,6 +16,9 @@ export const ceremonyKinds = [
   "haldi",
   "mehendi",
   "sangeet",
+  "carnival",
+  "pool-party",
+  "grah-shanti",
   "wedding",
   "celebration",
 ] as const;
@@ -24,6 +27,9 @@ export const ceremonyNames = {
   haldi: { en: "Haldi", gu: "હલદી" },
   mehendi: { en: "Mehendi", gu: "મહેંદી" },
   sangeet: { en: "Sangeet", gu: "સંગીત" },
+  carnival: { en: "Carnival", gu: "કાર્નિવલ" },
+  "pool-party": { en: "Pool Party", gu: "પૂલ પાર્ટી" },
+  "grah-shanti": { en: "Grah Shanti", gu: "ગ્રહ શાંતિ" },
   wedding: { en: "Wedding · Baraat & Varmala", gu: "લગ્ન · વરઘોડો અને વરમાળા" },
   celebration: { en: "Celebration", gu: "ઉજવણી" },
 };
@@ -165,6 +171,13 @@ export function eventCeremony(
 ): CeremonyKind {
   if (event.animation && event.animation !== "auto") return event.animation;
   const title = `${event.title.en} ${event.title.gu}`.toLowerCase();
+  if (
+    /grah|griha|gruh|ગ્રહ|ગૃહ/.test(title) &&
+    /shanti|santak|shantak|શાંતિ|શાંતક|સાંતક/.test(title)
+  )
+    return "grah-shanti";
+  if (/pool|પૂલ/.test(title)) return "pool-party";
+  if (/carnival|mela|કાર્નિવલ|મેળો/.test(title)) return "carnival";
   if (/haldi|pithi|હલદી|હળદી|પીઠી/.test(title)) return "haldi";
   if (/meh[ae]?ndi|mah[ae]?ndi|henna|મહેંદી|મહેન્દી|મેહંદી/.test(title))
     return "mehendi";

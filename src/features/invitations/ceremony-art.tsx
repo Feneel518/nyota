@@ -30,6 +30,18 @@ const descriptions: Record<CeremonyKind, { en: string; gu: string }> = {
     en: "The newlyweds stand hand in hand beneath the flower mandap, wearing wedding garlands beside the ceremonial lamps.",
     gu: "ફૂલો અને દીવાઓ વચ્ચે વર-વધૂ મહેમાનોનું સ્વાગત કરે છે.",
   },
+  carnival: {
+    en: "Carnival: colourful striped stalls, festive bunting and a Ferris wheel welcome a playful afternoon together.",
+    gu: "કાર્નિવલ: રંગબેરંગી તંબુઓ, તોરણો અને ચકડોળ સાથે આનંદભરી ઉજવણી.",
+  },
+  "pool-party": {
+    en: "Pool party: turquoise water, floating rings and parasols set the scene for a relaxed poolside celebration.",
+    gu: "પૂલ પાર્ટી: વાદળી પાણી, રંગીન ટ્યુબ અને છત્રીઓ વચ્ચે આનંદભરી ઉજવણી.",
+  },
+  "grah-shanti": {
+    en: "Grah Shanti: the couple gathers beside a sacred havan, kalash and lamps for family prayers and blessings.",
+    gu: "ગ્રહ શાંતિ: હવન, કળશ અને દીવાઓ સાથે વર-વધૂ માટે મંગલ પ્રાર્થના અને આશીર્વાદ.",
+  },
 };
 
 function Flower({
@@ -632,6 +644,200 @@ function Wedding({ content }: { content: InvitationContent }) {
   );
 }
 
+function AdditionalCelebration({
+  kind,
+  content,
+}: {
+  kind: "carnival" | "pool-party" | "grah-shanti";
+  content: InvitationContent;
+}) {
+  return (
+    <g data-celebration-art={kind}>
+      {kind === "carnival" ? (
+        <g>
+          <path d="M155 179Q350 234 545 179" stroke="#aa7850" strokeWidth="3" />
+          {[180, 222, 264, 306, 348, 390, 432, 474, 516].map((x, i) => (
+            <path
+              key={x}
+              d={`M${x} ${185 + Math.sin((i / 8) * Math.PI) * 25}l12 24 14-19Z`}
+              fill={i % 2 ? "#e8ad48" : "#a74e67"}
+            />
+          ))}
+          <g stroke="#bb8c57" strokeWidth="3">
+            <path d="m430 337 42-144 42 144M416 338h112" />
+            <circle cx="472" cy="236" r="67" fill="#fff2d9" fillOpacity=".65" />
+            <g className={styles.wheel}>
+              {[0, 60, 120, 180, 240, 300].map((angle) => (
+                <g key={angle} transform={`rotate(${angle} 472 236)`}>
+                  <path d="M472 236v-67" />
+                  <circle
+                    cx="472"
+                    cy="169"
+                    r="12"
+                    fill={angle % 120 ? "#a8546d" : "#eab559"}
+                  />
+                </g>
+              ))}
+            </g>
+            <circle cx="472" cy="236" r="8" fill="#eab559" />
+          </g>
+          <path
+            d="M166 294h115v102H166Z"
+            fill="#f4d7a6"
+            stroke="#aa7850"
+            strokeWidth="3"
+          />
+          <path d="M151 295h145l-30-66h-86Z" fill="#a94f66" />
+          <path d="m185 229-16 66h25l7-66Zm35 0v66h25l-8-66Z" fill="#fff0ce" />
+          <path d="M177 340h93v40h-93Z" fill="#a65b66" />
+          {[193, 221, 249].map((x) => (
+            <circle
+              key={x}
+              cx={x}
+              cy="324"
+              r="9"
+              fill="#e7b34f"
+              stroke="#fff1cf"
+              strokeWidth="3"
+            />
+          ))}
+          <Character
+            x={330}
+            y={291}
+            appearance={content.characters[0]}
+            outfit={content.outfits[0]}
+            motion="dance"
+          />
+          <Character
+            x={399}
+            y={291}
+            appearance={content.characters[1]}
+            outfit={content.outfits[1]}
+            motion="dance"
+          />
+        </g>
+      ) : kind === "pool-party" ? (
+        <g>
+          <ellipse
+            cx="350"
+            cy="376"
+            rx="195"
+            ry="65"
+            fill="#f8e7c9"
+            stroke="#b7a57d"
+            strokeWidth="3"
+          />
+          <ellipse cx="350" cy="376" rx="177" ry="51" fill="#6cbcc2" />
+          <g
+            className={styles.ripples}
+            stroke="#d2f2e8"
+            strokeWidth="3"
+            strokeLinecap="round"
+          >
+            <path d="M200 374q25-12 50 0t50 0M342 405q24-10 48 0t48 0M418 356q24-10 48 0" />
+          </g>
+          <g className={styles.floatRing}>
+            <ellipse cx="286" cy="382" rx="32" ry="16" fill="#d6778f" />
+            <ellipse cx="286" cy="382" rx="19" ry="8" fill="#70bec5" />
+            <path
+              d="m261 372 11 6m29 9 12 6"
+              stroke="#ffe6ca"
+              strokeWidth="8"
+            />
+          </g>
+          {[207, 493].map((x, i) => (
+            <g key={x}>
+              <path d={`M${x} 223v113`} stroke="#997952" strokeWidth="5" />
+              <path
+                d={`M${x - 60} 228q60-92 120 0Z`}
+                fill={i ? "#cc7889" : "#e8b255"}
+                stroke="#f8e7c9"
+                strokeWidth="2"
+              />
+              <path d={`M${x - 20} 228q20-92 40 0Z`} fill="#fff0ce" />
+            </g>
+          ))}
+          <Character
+            x={315}
+            y={237}
+            scale={0.85}
+            appearance={content.characters[0]}
+            outfit={content.outfits[0]}
+          />
+          <Character
+            x={385}
+            y={237}
+            scale={0.85}
+            appearance={content.characters[1]}
+            outfit={content.outfits[1]}
+          />
+          <path
+            d="M464 375v-31q0-14 12-14t12 14v34M466 354h21m-21 13h21"
+            stroke="#fff4db"
+            strokeWidth="4"
+          />
+        </g>
+      ) : (
+        <g>
+          <Character
+            x={295}
+            y={278}
+            appearance={content.characters[0]}
+            outfit={content.outfits[0]}
+          />
+          <Character
+            x={405}
+            y={278}
+            appearance={content.characters[1]}
+            outfit={content.outfits[1]}
+          />
+          <path
+            d="M315 378h70l-10 31h-50ZM308 378h84M325 389h50M332 401h36"
+            fill="#b66a46"
+            stroke="#ecc084"
+            strokeWidth="3"
+          />
+          <g className={styles.flame}>
+            <path
+              d="M350 376q-34-14-8-54-4 26 12 25 9-12 5-23 32 35-9 52Z"
+              fill="#edaa3b"
+            />
+            <path d="M350 375q-16-8 0-28 15 21 0 28Z" fill="#fff1b1" />
+          </g>
+          {[230, 470].map((x) => (
+            <g key={x}>
+              <path
+                d={`M${x - 14} 364q-11 29 14 31 25-2 14-31Z`}
+                fill="#c18c45"
+              />
+              <path
+                d={`M${x - 17} 364h34M${x - 12} 380h24`}
+                stroke="#ffe0a0"
+                strokeWidth="3"
+              />
+              <path
+                d={`M${x} 365q-30-18-23-26 19 0 23 26Zm0 0q30-18 23-26-19 0-23 26Z`}
+                fill="#617b49"
+              />
+              <ellipse cx={x} cy="350" rx="9" ry="15" fill="#946546" />
+            </g>
+          ))}
+          {[269, 431].map((x) => (
+            <g key={x}>
+              <path d={`M${x - 12} 401h24q-12 18-24 0Z`} fill="#c18c45" />
+              <path
+                className={styles.flame}
+                d={`M${x} 401q-10-9 0-23 10 14 0 23Z`}
+                fill="#f2b33e"
+              />
+            </g>
+          ))}
+        </g>
+      )}
+    </g>
+  );
+}
+
 export function CeremonyArt({
   content,
   kind,
@@ -694,7 +900,9 @@ export function CeremonyArt({
         aria-hidden="true"
       >
         <g className="ceremony-cast">
-          {kind !== "sangeet" && <Stage kind={kind} />}
+          {!["sangeet", "carnival", "pool-party"].includes(kind) && (
+            <Stage kind={kind} />
+          )}
           {kind === "haldi" ? (
             <Haldi content={content} />
           ) : kind === "mehendi" ? (
@@ -703,6 +911,10 @@ export function CeremonyArt({
             <Sangeet content={content} />
           ) : kind === "wedding" ? (
             <Wedding content={content} />
+          ) : kind === "carnival" ||
+            kind === "pool-party" ||
+            kind === "grah-shanti" ? (
+            <AdditionalCelebration kind={kind} content={content} />
           ) : (
             <g>
               <path
@@ -763,25 +975,6 @@ export function CeremonyArt({
                 stroke="#ad7456"
                 strokeWidth="7"
                 strokeLinecap="round"
-              />
-              <path
-                d="M320 289l2-7 2 7"
-                fill="#ae263d"
-                stroke="#ae263d"
-                strokeWidth="2"
-              />
-              <path
-                d="M313 299q9 18 18 0"
-                fill="none"
-                stroke="#d9af62"
-                strokeWidth="2.5"
-              />
-              <circle cx="322" cy="318" r="3" fill="#d9af62" />
-              <path
-                d="M367 277q11-8 21 0"
-                fill="none"
-                stroke="#dfc588"
-                strokeWidth="3"
               />
               <Petals />
             </g>

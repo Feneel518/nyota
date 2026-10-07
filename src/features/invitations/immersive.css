@@ -172,6 +172,11 @@
   line-height: 1.65;
   color: #57424b;
 }
+.immersive-scene .scene-copy .scene-couple-names {
+  font-size: clamp(28px, 3vw, 42px);
+  line-height: 1.15;
+  color: var(--invite-accent);
+}
 .immersive-scene .scene-copy .scene-event-meta {
   gap: 5px;
 }
@@ -196,8 +201,11 @@
 }
 .immersive-scene .scene-chapters {
   grid-row: 4;
-  margin: 0 auto;
+  margin: 0 0 0 auto;
+  width: 76%;
   max-width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
   padding: 10px 4px 4px;
   z-index: 4;
   scrollbar-width: thin;
@@ -434,7 +442,14 @@
   }
   .immersive-scene .scene-chapters {
     width: 100%;
+    flex-wrap: nowrap;
+    justify-content: safe center;
     padding-top: 5px;
+  }
+  .immersive-scene .scene-visual > svg,
+  .immersive-scene .scene-visual > [data-immersive="true"] {
+    bottom: 12%;
+    height: 62%;
   }
   .immersive-scene .scene-chapters [data-slot="button"] {
     font-size: 11px;
@@ -742,11 +757,15 @@
 }
 @media (hover: hover) and (pointer: fine) {
   .invitation[data-immersive="true"] .cover-actions [data-slot="button"]:hover,
-  .invitation[data-immersive="true"]
-    .scene-navigation
-    [data-slot="button"]:hover,
   .invitation[data-immersive="true"] .scene-copy [data-slot="button"]:hover {
     transform: translateY(-2px);
+    box-shadow:
+      inset 0 0 0 2px rgb(255 247 226 / 0.45),
+      0 5px 0 rgb(84 47 28 / 0.18);
+  }
+  .invitation[data-immersive="true"]
+    .scene-navigation
+    [data-slot="button"]:hover {
     box-shadow:
       inset 0 0 0 2px rgb(255 247 226 / 0.45),
       0 5px 0 rgb(84 47 28 / 0.18);

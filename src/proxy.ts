@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { invitationSlug } from "@/lib/invitation-url";
+import { invitationSlug, resolveInvitationDomain } from "@/lib/invitation-url";
 
 export function proxy(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
@@ -7,14 +7,12 @@ export function proxy(request: NextRequest) {
   const hostname = (request.headers.get("host") || "")
     .split(":")[0]
     .toLowerCase();
-  if (
-    hostname ===
-    new URL(process.env.APP_URL || "http://127.0.0.1:3000").hostname
-  )
+  const appUrl = process.env.APP_URL || "http://127.0.0.1:3000";
+  if (hostname === new URL(appUrl).hostname)
     return NextResponse.next({ request: { headers: requestHeaders } });
   const slug = invitationSlug(
     hostname,
-    process.env.INVITATION_DOMAIN?.trim().toLowerCase(),
+    resolveInvitationDomain(appUrl, process.env.INVITATION_DOMAIN),
   );
   if (!slug) return NextResponse.next({ request: { headers: requestHeaders } });
   requestHeaders.set("x-invitation-host", hostname);

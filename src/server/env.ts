@@ -1,5 +1,6 @@
 import "server-only";
 import { z } from "zod";
+import { resolveInvitationDomain } from "@/lib/invitation-url";
 const schema = z.object({
   APP_MODE: z.enum(["local", "test", "production"]).default("local"),
   APP_URL: z.url().default("http://127.0.0.1:3000"),
@@ -45,7 +46,7 @@ const schema = z.object({
   PRICE_PAISE: z.coerce.number().int().min(100).default(199900),
   CRON_SECRET: z.string().min(32).optional(),
   HASH_SECRET: z.string().min(32).optional(),
-  SUPPORT_EMAIL: z.email().optional(),
+  SUPPORT_EMAIL: z.email().default("feneelp@gmail.com"),
 });
 export type Environment = z.infer<typeof schema>;
 let cached: Environment | undefined;
@@ -54,6 +55,7 @@ export function env() {
   const e = schema.parse(
     Object.fromEntries(Object.entries(process.env).filter(([, v]) => v !== "")),
   );
+  e.INVITATION_DOMAIN = resolveInvitationDomain(e.APP_URL, e.INVITATION_DOMAIN);
   if (e.APP_MODE === "production" || process.env.VERCEL_ENV === "production") {
     for (const key of [
       "DATABASE_URL",

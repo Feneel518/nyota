@@ -4,6 +4,13 @@ const config: NextConfig = {
   skipProxyUrlNormalize: true,
   distDir: process.env.NEXT_DIST_DIR || ".next",
   serverExternalPackages: ["pg", "sharp"],
+  // The social image route reads these fonts from disk at runtime.
+  outputFileTracingIncludes: {
+    "/w/*/social": [
+      "./node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-500-normal.woff",
+      "./node_modules/@fontsource/noto-serif-gujarati/files/noto-serif-gujarati-gujarati-500-normal.woff",
+    ],
+  },
   async headers() {
     return [
       {

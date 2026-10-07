@@ -328,6 +328,90 @@ svg {
   flex-direction: column;
   gap: 12px;
 }
+.hero-eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: #dec8cc;
+}
+.hero-price {
+  font-size: 13px;
+  color: #dec8cc;
+  text-underline-offset: 4px;
+}
+.hero-price strong {
+  color: #fff4e8;
+  font-size: 20px;
+}
+.hero-demo-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  color: #fff4e8;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+.hero-price:hover {
+  text-decoration: underline;
+}
+.more-themes {
+  margin-top: 32px;
+}
+.more-themes summary {
+  cursor: pointer;
+  padding-block: 14px;
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+.more-themes[open] summary {
+  margin-bottom: 24px;
+}
+.setup-help {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 28px;
+}
+.setup-help > div {
+  max-width: 600px;
+}
+.setup-help h2 {
+  margin-block: 12px 20px;
+}
+.setup-help p {
+  color: var(--muted-foreground);
+}
+.demo-create-link,
+.invitation-referral {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.demo-create-link {
+  flex-shrink: 0;
+  font-size: 12px;
+}
+.demo-notice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.demo-notice > span {
+  max-width: 150px;
+}
+.invitation-referral {
+  display: flex;
+  width: fit-content;
+  margin: 6px auto 0;
+}
 .hero-actions [data-slot="button"] {
   min-height: 52px;
   padding-inline: 24px;
@@ -2418,6 +2502,7 @@ html[data-input="keyboard"]
 }
 .dashboard-invitation-card {
   overflow: hidden;
+  align-self: start;
 }
 .dashboard-invitation-card .dashboard-card-stationery {
   background: color-mix(in srgb, var(--invite-accent) 7%, var(--card));
@@ -2425,11 +2510,12 @@ html[data-input="keyboard"]
   color: var(--invite-accent);
   border-radius: 100px 100px 4px 4px / 30px 30px 4px 4px;
   height: auto;
-  padding: 22px;
+  min-height: 0;
+  padding: 18px;
   text-align: center;
 }
 .dashboard-card-stationery > svg {
-  width: 130px;
+  width: 108px;
   height: auto;
   margin: 0 auto 8px;
 }
@@ -2467,8 +2553,10 @@ html[data-input="keyboard"]
   margin-block: 28px;
 }
 .nyota-checkout .checkout-grid {
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
-  gap: 48px;
+  grid-template-columns: minmax(0, 360px) minmax(0, 500px);
+  justify-content: center;
+  align-items: start;
+  gap: 32px;
 }
 .checkout-secure {
   display: flex;
@@ -2478,9 +2566,10 @@ html[data-input="keyboard"]
   color: var(--muted-foreground);
 }
 .checkout-invitation {
+  min-height: 0;
   position: sticky;
   top: 32px;
-  padding: 48px 36px 28px;
+  padding: 28px 24px 22px;
   background: var(--card);
   color: var(--invite-accent);
   text-align: center;
@@ -2490,14 +2579,14 @@ html[data-input="keyboard"]
   border-radius: 160px 160px 8px 8px / 55px 55px 8px 8px;
 }
 .checkout-invitation > svg {
-  width: 200px;
-  margin: 0 auto 20px;
+  width: 132px;
+  margin: 0 auto 12px;
   color: var(--brass);
 }
 .checkout-invitation > .display {
-  font-size: clamp(38px, 4vw, 56px);
+  font-size: clamp(32px, 3vw, 42px);
   overflow-wrap: anywhere;
-  margin: 20px 0;
+  margin: 14px 0;
 }
 .checkout-invitation > p {
   margin-inline: auto;
@@ -2506,21 +2595,24 @@ html[data-input="keyboard"]
 .checkout-celebrations {
   display: flex;
   flex-direction: column;
-  margin: 28px 0;
+  margin: 20px 0;
   border-block: 1px solid var(--border);
-  padding: 20px 0;
-  gap: 16px;
+  padding: 14px 0;
+  gap: 10px;
 }
 .checkout-celebrations div {
   display: flex;
-  flex-direction: column;
-  gap: 3px;
+  align-items: baseline;
+  justify-content: space-between;
+  text-align: left;
+  gap: 12px;
 }
 .checkout-celebrations span:first-child {
   font-family: var(--font-heading);
-  font-size: 22px;
+  font-size: 18px;
 }
 .checkout-celebrations span:last-child {
+  text-align: right;
   font-size: 10px;
   color: var(--muted-foreground);
 }
@@ -2531,8 +2623,8 @@ html[data-input="keyboard"]
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 32px;
-  gap: 20px;
+  padding: 26px;
+  gap: 16px;
 }
 .nyota-checkout .checkout-summary > h2 {
   font-family: var(--font-sans);
@@ -2568,6 +2660,30 @@ html[data-input="keyboard"]
   align-items: center;
   justify-content: center;
   gap: 8px;
+}
+.checkout-expiry {
+  display: grid;
+  gap: 7px;
+  padding: 18px 20px;
+  border: 1px solid var(--brass);
+  border-left: 4px solid var(--brass);
+  border-radius: 8px;
+  color: var(--primary);
+  background: #fbf0dd;
+}
+.checkout-expiry > span {
+  font-size: 11px;
+  font-weight: 600;
+}
+.checkout-expiry strong {
+  font-size: 21px;
+  line-height: 1.4;
+  font-weight: 800;
+}
+.checkout-expiry p {
+  font-size: 11px;
+  line-height: 1.65;
+  color: #644e46;
 }
 .music-preview {
   display: flex;

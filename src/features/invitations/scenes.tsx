@@ -163,7 +163,7 @@ export default function Scenes({
           )}
           {scene === finale && (
             <>
-              <p className="display text-4xl">
+              <p className="display scene-couple-names">
                 {text(content.names[0])} & {text(content.names[1])}
               </p>
               <p>{text(content.wording)}</p>

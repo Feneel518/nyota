@@ -1,6 +1,8 @@
 // Interface copy is separate from optional invitation translation assistance.
 // A native Gujarati editorial review remains a launch requirement.
 export const ownerGujarati: Record<string, string> = {
+  "Your full six-month term starts at actual publication. Responses can be exported for another 30 days.":
+    "તમારો છ મહિનાનો સમયગાળો આમંત્રણ પ્રકાશિત થાય ત્યારથી શરૂ થાય છે. ત્યાર પછીના ૩૦ દિવસ સુધી પ્રતિસાદ નિકાસ કરી શકાશે.",
   "Save domain": "ડોમેન સાચવો",
   "Keep current domain": "હાલનું ડોમેન રાખો",
   "Check again": "ફરી તપાસો",

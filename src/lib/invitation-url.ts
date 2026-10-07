@@ -18,6 +18,15 @@ const reservedSlugs = new Set([
   "cdn",
   "assets",
 ]);
+export function resolveInvitationDomain(appUrl: string, configured?: string) {
+  const domain = configured?.trim().toLowerCase();
+  if (domain) return domain;
+  const hostname = new URL(appUrl).hostname;
+  return hostname === "nyotaa.app" || hostname === "www.nyotaa.app"
+    ? "nyotaa.app"
+    : undefined;
+}
+
 export function invitationSlugError(slug: string) {
   if (
     slug.length < 3 ||
@@ -35,7 +44,7 @@ export function invitationSlug(hostname: string, domain?: string) {
   const host = hostname.toLowerCase();
   if (!host.endsWith(suffix)) return null;
   const slug = host.slice(0, -suffix.length);
-  return hostnameSlug.test(slug) ? slug : null;
+  return hostnameSlug.test(slug) && !reservedSlugs.has(slug) ? slug : null;
 }
 export function invitationUrl(appUrl: string, slug: string, domain?: string) {
   const url = new URL(appUrl);

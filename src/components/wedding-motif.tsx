@@ -28,7 +28,32 @@ export function WeddingMotif({
         d="M38 122V66q0-17 20-18 16-23 35-13 27-29 54 0 19-10 35 13 20 1 20 18v56"
         opacity=".3"
       />
-      {kind === "sangeet" ? (
+      {kind === "carnival" ? (
+        <g>
+          <path d="M67 85h106l-53-43ZM76 85v46h88V85M102 131V94h36v37M120 42V28l22 6-22 8M88 85l32-43 32 43M70 101h30m40 0h30" />
+          <path
+            d="M88 85l32-43v43Zm32 0 32 0-32-43Z"
+            fill="currentColor"
+            fillOpacity=".12"
+          />
+        </g>
+      ) : kind === "pool-party" ? (
+        <g>
+          <ellipse cx="120" cy="115" rx="64" ry="20" />
+          <path d="M63 115q14-10 28 0t28 0t28 0t28 0M147 103V57M115 61q32-46 64 0ZM147 37V30" />
+          <ellipse cx="96" cy="104" rx="19" ry="8" />
+          <ellipse cx="96" cy="104" rx="9" ry="3" />
+        </g>
+      ) : kind === "grah-shanti" ? (
+        <g>
+          <path
+            d="M87 101h66l-9 28H96ZM81 101h78M99 111h42M104 121h32M120 96q-24-15-2-42-3 19 10 23 9-12 4-19 27 28-12 38Z"
+            fill="currentColor"
+            fillOpacity=".08"
+          />
+          <path d="M65 97q-18-15 0-35 18 20 0 35Zm-12 3h24l-5 15H58Zm122-3q-18-15 0-35 18 20 0 35Zm-12 3h24l-5 15h-14Z" />
+        </g>
+      ) : kind === "sangeet" ? (
         <g>
           <path
             d="m79 76 70-16 14 54-70 16Z"

@@ -68,11 +68,14 @@ test("marketing, themes, Gujarati, scene navigation, and mobile accessibility", 
     );
     await page.getByRole("button", { name: "Continue", exact: true }).click();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-      "Every path led us here.",
+      "A little sunshine & Haldi",
     );
-    await page.getByRole("button", { name: "Continue", exact: true }).click();
     for (let chapter = 0; chapter < 4; chapter++) {
       await page.getByRole("button", { name: "Continue", exact: true }).click();
+      await expect(page.locator("[data-invitation-screen]")).toHaveAttribute(
+        "data-invitation-screen",
+        String(chapter + 3),
+      );
     }
     await page
       .getByRole("button", { name: "To the invitation", exact: true })

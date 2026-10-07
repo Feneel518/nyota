@@ -25,6 +25,32 @@
   transform-origin: 350px 190px;
   animation: drape 6s var(--ceremony-ease) infinite;
 }
+.wheel {
+  transform-origin: 472px 236px;
+  animation: carnival-wheel 32s linear infinite;
+}
+.floatRing {
+  animation: pool-float 5s ease-in-out infinite;
+}
+.ripples {
+  animation: pool-ripple 4s ease-in-out infinite;
+}
+@keyframes carnival-wheel {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes pool-float {
+  50% {
+    transform: translate(8px, -4px);
+  }
+}
+@keyframes pool-ripple {
+  50% {
+    opacity: 0.45;
+    transform: translateX(5px);
+  }
+}
 .garland {
   transform-box: fill-box;
   transform-origin: top center;

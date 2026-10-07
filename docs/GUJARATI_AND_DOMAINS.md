@@ -8,17 +8,19 @@ Family lines and invitation wording each have six templates with English and Guj
 
 ## Couple subdomains on Vercel
 
-For `https://feneelnidharmi.yourdomain.com`, configure:
+For `https://feneelnidharmi.nyotaa.app`, configure:
 
 ```dotenv
-APP_URL=https://yourdomain.com
-INVITATION_DOMAIN=yourdomain.com
+APP_URL=https://www.nyotaa.app
+INVITATION_DOMAIN=nyotaa.app
 ```
 
-1. Connect `yourdomain.com` and `*.yourdomain.com` to the same Vercel project.
-2. Follow Vercel’s [wildcard domain and nameserver setup](https://vercel.com/docs/domains/working-with-domains). Vercel requires its nameservers for wildcard domains; preserve existing DNS records when changing providers.
+1. Connect `nyotaa.app`, `www.nyotaa.app`, and `*.nyotaa.app` to the same Vercel project. Keep the wildcard assigned to the application, without a redirect to the main site.
+2. Follow Vercel’s [wildcard domain setup](https://vercel.com/docs/domains/working-with-domains/add-a-domain#using-wildcard-domain), using its nameservers or the documented certificate-validation delegation for external DNS. Use the DNS values shown for the project and preserve existing records.
 3. Add the environment variables above to the Vercel project and redeploy.
 4. Set the invitation’s link name to `feneelnidharmi` in Review, then publish it.
+
+When `APP_URL` uses `nyotaa.app` or `www.nyotaa.app`, the app automatically uses `nyotaa.app` as the invitation domain even if `INVITATION_DOMAIN` is omitted. An explicit `INVITATION_DOMAIN` takes precedence. Localhost and deployment preview URLs keep path links unless a domain is explicitly configured. Both the main site and reserved infrastructure subdomains are excluded from invitation rewriting.
 
 The public URL, QR code, sharing, publication email, and social preview use the couple subdomain. `/details`, `/social`, and private RSVP editing open on the same subdomain. RSVP and analytics accept only the matching invitation origin; owner APIs continue to require the main app origin. The main app hostname is never rewritten as an invitation.
 

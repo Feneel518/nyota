@@ -1,5 +1,15 @@
 # Verification evidence — 6 October 2026
 
+## Marketing and first-customer improvements — 7 October 2026
+
+The homepage now explains the Gujarati/English offer, shows the configured price in the hero, and places full pricing before the feature and theme galleries. Three additional themes expand on demand. Setup inquiries use the user-provided public support email. Demo and guest pages include explicit creation links; guest referral links carry campaign parameters, without adding attribution storage.
+
+Homepage search/social metadata, a generated 1200 × 630 social image, and a marketing-only sitemap are implemented. `docs/marketing/` contains an exported PNG and a fictional demo recording; `docs/FIRST_CUSTOMERS.md` and the blank CSV support manual acquisition.
+
+Validation: isolated production build including TypeScript passed; full repository ESLint passed, followed by targeted lint after final edits. Two production-browser tests passed: the marketing/theme/Gujarati journey and desktop/mobile stationery/sign-in accessibility. The older journey assertion was updated to match the existing removal of the redundant story screen. Ad hoc browser checks verified expanded themes, demo-to-sign-in navigation, support mail link, PNG response, sitemap, and horizontal overflow at 320/390/1440px. The final 320px Gujarati demo creation link was also exercised. Screenshots and the exported social card were visually inspected.
+
+Tests used local providers and the production server at `127.0.0.1:3002`. No deployment, live purchase, outreach, or external email was performed. Operator identity, refund eligibility, financial-record retention, and live-provider verification remain open. The user supplied only the public support email; no business identity or commercial promises were invented.
+
 All synthetic data is isolated in PostgreSQL on `127.0.0.1:55432/wedding`. Browser checks use the Next.js production build at `127.0.0.1:3001`, local mail/object storage, and a guarded local payment adapter. No live charge or external email was made.
 
 | Check | Evidence and scope |

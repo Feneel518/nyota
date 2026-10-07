@@ -12,6 +12,13 @@ it.each([
   ["The wedding", "", "wedding"],
   ["", "લગ્ન સમારંભ", "wedding"],
   ["Family dinner", "", "celebration"],
+  ["Wedding carnival", "", "carnival"],
+  ["", "કાર્નિવલ", "carnival"],
+  ["Pool Party", "", "pool-party"],
+  ["", "પૂલ પાર્ટી", "pool-party"],
+  ["Grah Santak", "", "grah-shanti"],
+  ["Griha Shanti", "", "grah-shanti"],
+  ["", "ગ્રહ શાંતિ", "grah-shanti"],
 ] as const)("chooses a scene for %s / %s", (en, gu, expected) => {
   expect(eventCeremony({ title: { en, gu } })).toBe(expected);
 });
@@ -28,3 +35,12 @@ it("loads old invitations without an animation field", () => {
   old.events.forEach((event) => delete event.animation);
   expect(contentSchema.safeParse(old).success).toBe(true);
 });
+it.each(["carnival", "pool-party", "grah-shanti"] as const)(
+  "saves the %s scene and honors it over the title",
+  (animation) => {
+    const content = structuredClone(demoContent);
+    content.events[0].animation = animation;
+    expect(contentSchema.safeParse(content).success).toBe(true);
+    expect(eventCeremony(content.events[0])).toBe(animation);
+  },
+);

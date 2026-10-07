@@ -31,7 +31,7 @@ const copy: Record<string, { title: string; sections: [string, string][] }> = {
       ],
       [
         "Before a public launch",
-        "The final operator identity, financial-record retention period, and support address must be confirmed before accepting live payments. This build does not claim that review has happened.",
+        "The final operator identity and financial-record retention period must be confirmed before accepting live payments. This build does not claim that review has happened. For questions, use the support email below.",
       ],
     ],
   },
@@ -67,6 +67,10 @@ const copy: Record<string, { title: string; sections: [string, string][] }> = {
   support: {
     title: "A helping hand, when you need one.",
     sections: [
+      [
+        "Before you get started",
+        "You can explore the sample invitation without an account, then create and preview your own for free. If you have a question about setup or wording, email us using the contact link below. Photographers, planners, and invitation designers are welcome to ask about using Nyota with their couples.",
+      ],
       [
         "Payment or publishing",
         "Include the order reference shown in your checkout, the invitation link, and a short description of the issue. Never send payment card details, passwords, or private RSVP edit links.",
