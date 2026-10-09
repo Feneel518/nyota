@@ -1,0 +1,13 @@
+.dialog {
+  background: var(--card);
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  width: min(34rem, calc(100vw - 2rem));
+  max-width: 34rem;
+}
+
+.dialog .title {
+  font-size: 1.8rem;
+  line-height: 1.15;
+  padding-right: 1.5rem;
+}

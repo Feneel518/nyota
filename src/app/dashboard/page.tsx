@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { OwnerText } from "@/components/owner-language";
 import { currentUser } from "@/server/auth";
+import { isAdmin } from "@/lib/admin";
 import { listWeddings } from "@/server/weddings";
 import { Brand } from "@/components/site";
 import { WeddingMotif } from "@/components/wedding-motif";
@@ -34,6 +35,7 @@ export default async function Dashboard() {
     <div className="workspace nyota-dashboard">
       <header className="workspace-header">
         <Brand />
+        {isAdmin(user) && <Link href="/admin">Admin dashboard</Link>}
         <SignOut />
       </header>
       <main id="main">

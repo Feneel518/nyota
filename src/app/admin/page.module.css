@@ -1,0 +1,239 @@
+.shell {
+  max-width: 1560px;
+  margin: auto;
+  padding: 0 clamp(1rem, 4vw, 4rem) 4rem;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.header nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  font-size: 0.85rem;
+}
+.header nav span {
+  background: var(--secondary);
+  border-radius: 6px;
+  padding: 0.35rem 0.7rem;
+}
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 3rem 0 2rem;
+}
+.heading h1 {
+  font-family: var(--font-heading);
+  font-size: clamp(2.4rem, 4vw, 3.8rem);
+  line-height: 1.1;
+  margin-bottom: 0.7rem;
+}
+.heading p,
+.sectionHeading p,
+.notes p {
+  color: var(--muted-foreground);
+  line-height: 1.7;
+}
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 2.5rem;
+}
+.metrics > div {
+  background: var(--card);
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.metrics span {
+  font-size: 0.85rem;
+}
+.metrics strong {
+  font-size: 2rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.metrics small {
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+}
+.customers {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card);
+  overflow: hidden;
+}
+.sectionHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem;
+}
+.sectionHeading h2,
+.notes h2 {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+.sectionHeading p {
+  font-size: 0.8rem;
+}
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 1rem;
+  padding: 0 1.5rem 1.5rem;
+}
+.filters label {
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  flex: 1 1 230px;
+}
+.filters select {
+  height: 2.25rem;
+  width: 100%;
+  border: 1px solid var(--input);
+  border-radius: 6px;
+  padding: 0 0.65rem;
+  background: var(--background);
+  color: var(--foreground);
+}
+.filters select:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+.filters > a {
+  align-self: center;
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  text-decoration: underline;
+}
+.tableScroll {
+  overflow-x: auto;
+}
+.tableScroll table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.8rem;
+  text-align: left;
+}
+.tableScroll th {
+  font-weight: 500;
+  padding: 1rem;
+  background: var(--secondary);
+  white-space: nowrap;
+}
+.tableScroll td {
+  padding: 1.2rem 1rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.tableScroll td:first-child {
+  min-width: 220px;
+  max-width: 340px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.tableScroll strong {
+  font-weight: 600;
+  display: block;
+}
+.tableScroll small {
+  display: block;
+  color: var(--muted-foreground);
+  font-size: 0.7rem;
+  margin-top: 0.35rem;
+}
+.email {
+  display: block;
+  margin-top: 0.2rem;
+}
+.status,
+.paid {
+  display: inline-block;
+  border-radius: 5px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.72rem;
+  background: var(--secondary);
+}
+.paid {
+  color: #22543d;
+  background: #e4f1e9;
+}
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  font-size: 0.8rem;
+}
+.pagination div {
+  display: flex;
+  gap: 1.5rem;
+}
+.pagination a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.empty {
+  padding: 4rem 1.5rem;
+  text-align: center;
+  border-top: 1px solid var(--border);
+}
+.empty h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+.empty p {
+  color: var(--muted-foreground);
+}
+.notes {
+  max-width: 85ch;
+  margin-top: 2rem;
+}
+.notes p {
+  font-size: 0.8rem;
+  margin-top: 0.6rem;
+}
+@media (min-width: 1300px) {
+  .metrics {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .metrics > div {
+    padding: 1rem;
+  }
+  .heading,
+  .sectionHeading {
+    align-items: start;
+    flex-direction: column;
+  }
+  .header nav {
+    gap: 0.75rem;
+  }
+  .heading {
+    margin-top: 2rem;
+  }
+}

@@ -49,7 +49,9 @@ export function attendanceTotals(responses: GuestResponse[], events: string[]) {
   );
 }
 export function safeReturn(value: string | null) {
-  return value && /^\/dashboard(?:\/|$)/.test(value) && !value.includes("\\")
+  return value &&
+    (/^\/dashboard(?:\/|$)/.test(value) || value === "/admin") &&
+    !value.includes("\\")
     ? value
     : "/dashboard";
 }

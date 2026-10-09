@@ -26,6 +26,26 @@ function createAuth() {
     session: { expiresIn: 60 * 60 * 24 * 7 },
     advanced: { useSecureCookies: e.APP_URL.startsWith("https://") },
     rateLimit: { enabled: true, storage: "database" },
+    databaseHooks: {
+      session: {
+        create: {
+          after: async (session) => {
+            // Preserve sign-in history even after sessions expire or are deleted.
+            // Analytics failure must not prevent a successful sign-in.
+            try {
+              await db().insert(schema.audit).values({
+                actorId: session.userId,
+                action: "auth.sign_in",
+                targetId: session.userId,
+                outcome: "success",
+              });
+            } catch {
+              console.error("Could not record sign-in analytics.");
+            }
+          },
+        },
+      },
+    },
     plugins: [
       magicLink({
         expiresIn: 600,
@@ -51,7 +71,9 @@ export async function currentUser() {
   // Signed-out visitors do not need to initialize auth or check the database.
   // Cookie presence alone never authenticates a user; validate it below.
   if (!getSessionCookie(requestHeaders)) return null;
-  return (await auth().api.getSession({ headers: requestHeaders }))?.user ?? null;
+  return (
+    (await auth().api.getSession({ headers: requestHeaders }))?.user ?? null
+  );
 }
 export async function requireUser() {
   const user = await currentUser();
