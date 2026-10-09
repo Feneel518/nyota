@@ -64,6 +64,20 @@ export default function Home() {
   }).format(env().PRICE_PAISE / 100);
   return (
     <div className={styles.home}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "@id": `${brand.url}/#website`,
+            name: brand.name,
+            url: brand.url,
+            description: metadata.description,
+            inLanguage: "en-IN",
+          }).replace(/</g, "\\u003c"),
+        }}
+      />
       <div className="wine-stage">
         <SiteHeader />
       </div>
@@ -445,7 +459,11 @@ export default function Home() {
   );
 }
 
-function ThemeGallery({ items }: { items: readonly (typeof themes)[number][] }) {
+function ThemeGallery({
+  items,
+}: {
+  items: readonly (typeof themes)[number][];
+}) {
   return (
     <div className="theme-gallery">
       {items.map((theme) => (

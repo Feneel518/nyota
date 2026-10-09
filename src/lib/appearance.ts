@@ -1,3 +1,14 @@
+export type CharacterGender = "male" | "female";
+
+// Invitations saved before gender selection keep their original partner roles.
+export function ceremonyPartners(
+  genders: [CharacterGender, CharacterGender] = ["female", "male"],
+) {
+  const arriving = genders[0] === "male" && genders[1] === "female" ? 0 : 1;
+  const waiting = arriving === 0 ? 1 : 0;
+  return { arriving, waiting } as const;
+}
+
 // IDs are persisted as array indices. Append new choices to preserve saved invitations.
 export const characterOptions = [
   {

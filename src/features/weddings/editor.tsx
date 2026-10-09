@@ -1008,6 +1008,31 @@ export function Editor({
                     {c.names[i][c.defaultLanguage] || `Partner ${i + 1}`}
                     {t("’s character")}
                   </FieldLegend>
+                  <FieldLabel>{t("Gender")}</FieldLabel>
+                  <ToggleGroup
+                    type="single"
+                    variant="outline"
+                    aria-label={`${c.names[i][c.defaultLanguage] || `Partner ${i + 1}`} — ${t("Gender")}`}
+                    value={(c.genders ?? ["female", "male"])[i]}
+                    onValueChange={(value) => {
+                      if (value !== "male" && value !== "female") return;
+                      const genders: ["male" | "female", "male" | "female"] = [
+                        ...(c.genders ?? ["female", "male"]),
+                      ];
+                      genders[i] = value;
+                      update("genders", genders);
+                    }}
+                  >
+                    <ToggleGroupItem value="male">{t("Male")}</ToggleGroupItem>
+                    <ToggleGroupItem value="female">
+                      {t("Female")}
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+                  <FieldDescription>
+                    {t(
+                      "The male partner arrives on horseback and the female partner waits. If both match, the second partner arrives.",
+                    )}
+                  </FieldDescription>
                   <ToggleGroup
                     type="single"
                     className="appearance-options"

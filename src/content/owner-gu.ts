@@ -1,6 +1,11 @@
 // Interface copy is separate from optional invitation translation assistance.
 // A native Gujarati editorial review remains a launch requirement.
 export const ownerGujarati: Record<string, string> = {
+  Gender: "લિંગ",
+  Male: "પુરુષ",
+  Female: "સ્ત્રી",
+  "The male partner arrives on horseback and the female partner waits. If both match, the second partner arrives.":
+    "પુરુષ સાથી ઘોડા પર આવે છે અને સ્ત્રી સાથી રાહ જુએ છે. બંનેનું લિંગ સમાન હોય તો બીજા સાથી ઘોડા પર આવે છે.",
   "Your full six-month term starts at actual publication. Responses can be exported for another 30 days.":
     "તમારો છ મહિનાનો સમયગાળો આમંત્રણ પ્રકાશિત થાય ત્યારથી શરૂ થાય છે. ત્યાર પછીના ૩૦ દિવસ સુધી પ્રતિસાદ નિકાસ કરી શકાશે.",
   "Save domain": "ડોમેન સાચવો",

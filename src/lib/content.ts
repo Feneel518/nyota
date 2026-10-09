@@ -92,6 +92,9 @@ export const contentSchema = z
     languages: z.array(z.enum(languages)).min(1).max(2),
     defaultLanguage: z.enum(languages),
     theme: z.enum(themes),
+    genders: z
+      .tuple([z.enum(["male", "female"]), z.enum(["male", "female"])])
+      .optional(),
     characters: z.tuple([
       z
         .number()
@@ -284,6 +287,7 @@ export function emptyContent(): InvitationContent {
     defaultLanguage: "en",
     theme: "royal",
     characters: [0, 1],
+    genders: ["female", "male"],
     outfits: [0, 1],
     music: "none",
     photos: [],
@@ -311,6 +315,7 @@ export const demoContent: InvitationContent = {
   defaultLanguage: "en",
   theme: "royal",
   characters: [0, 1],
+  genders: ["female", "male"],
   outfits: [0, 1],
   music: "courtyard",
   photos: [],

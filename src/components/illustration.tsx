@@ -1,6 +1,7 @@
 import type { InvitationContent } from "@/lib/content";
 import { characterOptions, outfitOptions } from "@/lib/appearance";
 import type { ReactNode } from "react";
+import { architectureNames, ThemeArchitecture } from "./theme-architecture";
 const palettes = {
   royal: {
     sky: "#ead6cd",
@@ -125,16 +126,13 @@ export function Character({
   const { skin, hair, style } = look;
   const beard = "beard" in look ? look.beard : undefined;
   const flared = attire.shape === "flared";
-  const clothes =
-    occasion === "sangeet"
-      ? attire.sangeet
-      : occasion === "baraat"
-        ? "#f1c67e"
-        : attire.color;
+  const clothes = attire.color;
   return (
     <g
       transform={`translate(${x} ${y}) scale(${scale})`}
       data-attire={occasion}
+      data-outfit={outfit}
+      data-appearance={appearance}
       data-cut={flared ? "draped" : "tailored"}
     >
       <ellipse cx="0" cy="105" rx="30" ry="6" fill="#442934" opacity=".12" />
@@ -448,9 +446,7 @@ export function Courtyard({
       role="img"
       aria-label={
         label ??
-        (theme === "garden"
-          ? "An illustrated garden pavilion with a couple and flowering trees"
-          : "An illustrated Indian courtyard with a couple, arches, and flowering trees")
+        `An illustrated couple at ${architectureNames[theme]}, with flowering trees`
       }
     >
       <rect width="700" height="480" fill={p.sky} />
@@ -481,63 +477,72 @@ export function Courtyard({
         stroke={p.shadow}
         opacity=".25"
       />
-      <path d="M113 362V169H242V132H458V169H587V362" fill={p.wall} />
-      <path
-        d="M103 166H253V180H103ZM447 166H597V180H447ZM229 128H471V140H229Z"
-        fill={p.roof}
-      />
-      <path
-        d="M250 127Q261 111 281 114Q303 66 350 53Q398 66 419 114Q438 111 450 127Z"
-        fill={p.roof}
-      />
-      <path
-        d="M270 120Q311 117 350 70Q390 117 429 120M350 53V39M341 44H359"
-        stroke={p.trim}
-        strokeWidth="2"
-      />
-      <path
-        d="M144 165V128Q178 85 211 128V165M489 165V128Q522 85 556 128V165"
-        fill={p.roof}
-      />
-      <path d="M140 128H215M485 128H560" stroke={p.trim} strokeWidth="3" />
-      <path
-        d="M253 355V242Q253 179 350 149Q447 179 447 242V355"
-        fill={p.shadow}
-      />
-      <path
-        d="M279 359V242Q279 200 350 172Q421 200 421 242V359Z"
-        fill={p.ink}
-      />
-      <path
-        d="M268 359V242Q268 190 350 161Q432 190 432 242V359"
-        stroke={p.trim}
-        strokeWidth="3"
-      />
-      <path
-        d="M298 358V246Q298 216 350 194Q402 216 402 246V358"
-        fill={p.sky}
-        opacity=".35"
-      />
-      {[155, 207, 493, 545].map((x, i) => (
-        <g key={x}>
+      {theme === "royal" ? (
+        <g data-architecture="royal">
+          <path d="M113 362V169H242V132H458V169H587V362" fill={p.wall} />
           <path
-            d={`M${x - 15} 268V218Q${x} 190 ${x + 15} 218V268Z`}
+            d="M103 166H253V180H103ZM447 166H597V180H447ZM229 128H471V140H229Z"
+            fill={p.roof}
+          />
+          <path
+            d="M250 127Q261 111 281 114Q303 66 350 53Q398 66 419 114Q438 111 450 127Z"
+            fill={p.roof}
+          />
+          <path
+            d="M270 120Q311 117 350 70Q390 117 429 120M350 53V39M341 44H359"
+            stroke={p.trim}
+            strokeWidth="2"
+          />
+          <path
+            d="M144 165V128Q178 85 211 128V165M489 165V128Q522 85 556 128V165"
+            fill={p.roof}
+          />
+          <path d="M140 128H215M485 128H560" stroke={p.trim} strokeWidth="3" />
+          <path
+            d="M253 355V242Q253 179 350 149Q447 179 447 242V355"
+            fill={p.shadow}
+          />
+          <path
+            d="M279 359V242Q279 200 350 172Q421 200 421 242V359Z"
             fill={p.ink}
           />
           <path
-            d={`M${x - 11} 265V218Q${x} 198 ${x + 11} 218V265`}
+            d="M268 359V242Q268 190 350 161Q432 190 432 242V359"
             stroke={p.trim}
-            opacity=".8"
+            strokeWidth="3"
           />
           <path
-            d={`M${x - 15} 310V290Q${x} 270 ${x + 15} 290V310Z`}
-            fill={p.shadow}
+            d="M298 358V246Q298 216 350 194Q402 216 402 246V358"
+            fill={p.sky}
+            opacity=".35"
           />
-          {i % 2 === 0 && (
-            <path d={`M${x} 218V263M${x - 10} 238H${x + 10}`} stroke={p.trim} />
-          )}
+          {[155, 207, 493, 545].map((x, i) => (
+            <g key={x}>
+              <path
+                d={`M${x - 15} 268V218Q${x} 190 ${x + 15} 218V268Z`}
+                fill={p.ink}
+              />
+              <path
+                d={`M${x - 11} 265V218Q${x} 198 ${x + 11} 218V265`}
+                stroke={p.trim}
+                opacity=".8"
+              />
+              <path
+                d={`M${x - 15} 310V290Q${x} 270 ${x + 15} 290V310Z`}
+                fill={p.shadow}
+              />
+              {i % 2 === 0 && (
+                <path
+                  d={`M${x} 218V263M${x - 10} 238H${x + 10}`}
+                  stroke={p.trim}
+                />
+              )}
+            </g>
+          ))}
         </g>
-      ))}
+      ) : (
+        <ThemeArchitecture theme={theme} palette={p} />
+      )}
       <path d="M102 344H599V360H102Z" fill={p.shadow} />
       <path d="M99 358H603V367H99Z" fill={p.trim} />
       <path d="M254 367H447L468 393H232Z" fill={p.wall} />

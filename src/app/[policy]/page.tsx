@@ -1,9 +1,16 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SiteHeader, SiteFooter } from "@/components/site";
 import { env } from "@/server/env";
-const copy: Record<string, { title: string; sections: [string, string][] }> = {
+import { brand } from "@/lib/brand";
+const copy: Record<
+  string,
+  { title: string; description: string; sections: [string, string][] }
+> = {
   privacy: {
     title: "Your celebration. Your privacy.",
+    description:
+      "Learn how Nyota handles wedding invitation content, account information, guest RSVPs, translations, and data retention.",
     sections: [
       [
         "What is public",
@@ -37,6 +44,8 @@ const copy: Record<string, { title: string; sections: [string, string][] }> = {
   },
   terms: {
     title: "A little clarity before the celebrations.",
+    description:
+      "Read Nyota's terms for wedding invitations, including payments, six-month hosting, content, guest responses, and refund requests.",
     sections: [
       [
         "One invitation, one payment",
@@ -66,6 +75,8 @@ const copy: Record<string, { title: string; sections: [string, string][] }> = {
   },
   support: {
     title: "A helping hand, when you need one.",
+    description:
+      "Get help with your Nyota wedding invitation, from setup and wording to payments, publishing updates, and guest RSVPs.",
     sections: [
       [
         "Before you get started",
@@ -90,8 +101,24 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ policy: string }>;
-}) {
-  return { title: copy[(await params).policy]?.title || "Page not found" };
+}): Promise<Metadata> {
+  const { policy } = await params;
+  const page = Object.hasOwn(copy, policy) ? copy[policy] : undefined;
+  if (!page) notFound();
+  const url = `${brand.url}/${policy}`;
+  return {
+    title: page.title,
+    description: page.description,
+    alternates: { canonical: url },
+    openGraph: {
+      title: page.title,
+      description: page.description,
+      url,
+      siteName: brand.name,
+      type: "website",
+      locale: "en_IN",
+    },
+  };
 }
 export default async function Policy({
   params,
@@ -99,7 +126,7 @@ export default async function Policy({
   params: Promise<{ policy: string }>;
 }) {
   const { policy } = await params;
-  const page = copy[policy];
+  const page = Object.hasOwn(copy, policy) ? copy[policy] : undefined;
   if (!page) notFound();
   return (
     <>

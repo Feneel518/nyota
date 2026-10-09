@@ -1,5 +1,83 @@
 import { test, expect } from "@playwright/test";
 
+test("Sangeet performers stay visible and the bride waits through the horse arrival", async ({
+  page,
+}) => {
+  await page.goto("/demo");
+  await page
+    .getByRole("button", { name: "Open the invitation", exact: true })
+    .click();
+  const chapters = page.getByRole("navigation", {
+    name: "Celebration chapters",
+  });
+  for (const viewport of [
+    { width: 1365, height: 900 },
+    { width: 390, height: 844 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await chapters
+      .getByRole("button", { name: "An evening of music", exact: true })
+      .click();
+    const dancers = page.locator(
+      '[data-ceremony="sangeet"] [data-attire="sangeet"]',
+    );
+    await expect(dancers).toHaveCount(4);
+    for (const dancer of await dancers.all()) {
+      await expect(dancer).toBeInViewport();
+      const box = await dancer.boundingBox();
+      expect(box!.height).toBeGreaterThan(60);
+    }
+    await expect(
+      page.locator('[data-ceremony="sangeet"] foreignObject'),
+    ).toHaveCount(0);
+    await page.screenshot({ path: `.local/sangeet-${viewport.width}.png` });
+
+    await chapters
+      .getByRole("button", { name: "The wedding", exact: true })
+      .click();
+    const art = page.locator('[data-ceremony="wedding"]');
+    await expect(art).toBeVisible();
+    await art.evaluate((element) =>
+      element.getAnimations({ subtree: true }).forEach((a) => {
+        a.pause();
+        a.currentTime = 3000;
+      }),
+    );
+    const waiting = art.locator('[data-wedding-role="waiting"]');
+    const arriving = art.locator('[data-wedding-role="arriving"]');
+    await expect(waiting).toBeInViewport();
+    await expect(arriving).toBeInViewport();
+    await expect(waiting.locator('[data-outfit="0"]')).toHaveCount(1);
+    await expect(arriving.locator('[data-outfit="1"]')).toHaveCount(1);
+    expect(
+      await waiting.evaluate((e) => getComputedStyle(e.parentElement!).opacity),
+    ).toBe("1");
+    // The waiting partner stays still while the procession advances.
+    const before = await waiting.boundingBox();
+    const riderBefore = await arriving.boundingBox();
+    await art.evaluate((element) =>
+      element.getAnimations({ subtree: true }).forEach((a) => {
+        a.currentTime = 4500;
+      }),
+    );
+    const after = await waiting.boundingBox();
+    const riderAfter = await arriving.boundingBox();
+    expect(Math.abs(after!.x - before!.x)).toBeLessThan(4);
+    expect(riderAfter!.x).toBeGreaterThan(riderBefore!.x + 10);
+    await page.screenshot({ path: `.local/baraat-${viewport.width}.png` });
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await expect
+      .poll(() =>
+        art
+          .locator('[data-wedding-role="waiting"]')
+          .evaluate((e) => getComputedStyle(e.parentElement!).opacity),
+      )
+      .toBe("0");
+    await expect(art.locator(".character-garland").first()).toBeInViewport();
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+  }
+});
+
 test("invitation turns through seven chapters without the redundant story screen", async ({
   page,
 }) => {

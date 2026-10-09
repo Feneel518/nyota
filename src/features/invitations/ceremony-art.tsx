@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, type CSSProperties } from "react";
 import { Character, Courtyard } from "@/components/illustration";
+import { ceremonyPartners } from "@/lib/appearance";
 import {
   type CeremonyKind,
   type InvitationContent,
@@ -184,14 +185,14 @@ function Haldi({ content }: { content: InvitationContent }) {
         x={316}
         y={276}
         appearance={content.characters[0]}
-        outfit={1}
+        outfit={content.outfits[0]}
         scale={0.9}
       />
       <Character
         x={390}
         y={276}
         appearance={content.characters[1]}
-        outfit={1}
+        outfit={content.outfits[1]}
         scale={0.9}
       />
       <Character x={228} y={286} appearance={2} outfit={0} motion="toss" />
@@ -245,6 +246,7 @@ function Haldi({ content }: { content: InvitationContent }) {
 }
 
 function Mehendi({ content }: { content: InvitationContent }) {
+  const { waiting, arriving } = ceremonyPartners(content.genders);
   return (
     <g>
       <g className={styles.swing}>
@@ -254,8 +256,8 @@ function Mehendi({ content }: { content: InvitationContent }) {
           x={316}
           y={264}
           scale={0.82}
-          appearance={content.characters[0]}
-          outfit={content.outfits[0]}
+          appearance={content.characters[waiting]}
+          outfit={content.outfits[waiting]}
           motion="henna"
         />
         {[220, 252, 284, 316].map((y) => (
@@ -274,6 +276,13 @@ function Mehendi({ content }: { content: InvitationContent }) {
         motion="henna"
       />
       <path d="M348 315L332 312L330 327Z" fill="#637343" />
+      <Character
+        x={218}
+        y={284}
+        scale={0.85}
+        appearance={content.characters[arriving]}
+        outfit={content.outfits[arriving]}
+      />
       <g transform="translate(493 303)">
         <circle r="68" fill="#fff2d8" stroke="#b49760" strokeWidth="2" />
         <path
@@ -447,7 +456,7 @@ function Sangeet({ content }: { content: InvitationContent }) {
         <path d="M502 204L235 398H410Z" fill="#f4b9ce" opacity=".28" />
         <path d="M454 204L235 398H335Z" fill="#edd59a" opacity=".18" />
       </g>
-      <g>
+      <g className={styles.dancer}>
         <Character
           x={309}
           y={273}
@@ -455,10 +464,9 @@ function Sangeet({ content }: { content: InvitationContent }) {
           outfit={content.outfits[0]}
           motion="dance"
           occasion="sangeet"
-          composited
         />
       </g>
-      <g>
+      <g className={styles.partner}>
         <Character
           x={390}
           y={275}
@@ -466,7 +474,6 @@ function Sangeet({ content }: { content: InvitationContent }) {
           outfit={content.outfits[1]}
           motion="dance"
           occasion="sangeet"
-          composited
         />
       </g>
       <Character
@@ -477,7 +484,6 @@ function Sangeet({ content }: { content: InvitationContent }) {
         scale={0.85}
         motion="dance"
         occasion="sangeet"
-        composited
       />
       <Character
         x={485}
@@ -487,7 +493,6 @@ function Sangeet({ content }: { content: InvitationContent }) {
         scale={0.85}
         motion="drum"
         occasion="sangeet"
-        composited
       />
       <Dhol x={485} y={350} />
       {[0, 1, 2, 3].map((i) => (
@@ -509,9 +514,32 @@ function Sangeet({ content }: { content: InvitationContent }) {
 }
 
 function Wedding({ content }: { content: InvitationContent }) {
+  const { arriving, waiting } = ceremonyPartners(content.genders);
   return (
     <g>
       <g className={styles.baraat}>
+        <g data-wedding-role="waiting" data-partner={waiting}>
+          <Character
+            x={477}
+            y={274}
+            appearance={content.characters[waiting]}
+            outfit={content.outfits[waiting]}
+          />
+          <path
+            d="M459 314q-5 38 18 42q23-4 18-42"
+            stroke="#68824d"
+            strokeWidth="4"
+          />
+          {Array.from({ length: 9 }, (_, i) => (
+            <Flower
+              key={i}
+              x={459 + i * 4.5}
+              y={316 + Math.sin((i / 8) * Math.PI) * 38}
+              color={i % 2 ? "#f4dcb0" : "#b2455d"}
+              size={0.55}
+            />
+          ))}
+        </g>
         <g className={styles.procession}>
           <Character x={208} y={283} appearance={2} outfit={2} motion="dance" />
           <Character
@@ -558,15 +586,17 @@ function Wedding({ content }: { content: InvitationContent }) {
               <circle cx="51" cy="-47" r="2.5" fill="#47372d" />
               <Flower x={37} y={-59} color="#dc9b37" />
             </g>
-            <Character
-              x={-20}
-              y={-74}
-              scale={0.75}
-              appearance={content.characters[1]}
-              outfit={1}
-              motion="ride"
-              occasion="baraat"
-            />
+            <g data-wedding-role="arriving" data-partner={arriving}>
+              <Character
+                x={-20}
+                y={-74}
+                scale={0.75}
+                appearance={content.characters[arriving]}
+                outfit={content.outfits[arriving]}
+                motion="ride"
+                occasion="baraat"
+              />
+            </g>
           </g>
           <g className={styles.umbrella}>
             <path d="M425 237V374" stroke="#a8814d" strokeWidth="4" />
