@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { OwnerText } from "@/components/owner-language";
 import { currentUser } from "@/server/auth";
 import { listWeddings } from "@/server/weddings";
@@ -26,7 +27,8 @@ import { NewWedding, SignOut } from "@/features/weddings/dashboard";
 import { eventDate, themeNames } from "@/lib/content";
 export const metadata = { title: "Your invitations" };
 export default async function Dashboard() {
-  const user = (await currentUser())!;
+  const user = await currentUser();
+  if (!user) redirect("/sign-in");
   const rows = await listWeddings(user.id);
   return (
     <div className="workspace nyota-dashboard">

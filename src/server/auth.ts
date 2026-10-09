@@ -1,5 +1,6 @@
 ﻿import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { getSessionCookie } from "better-auth/cookies";
 import { magicLink } from "better-auth/plugins";
 import { headers } from "next/headers";
 import { db } from "./db";
@@ -46,9 +47,11 @@ function createAuth() {
 }
 export async function currentUser() {
   if (!env().DATABASE_URL || !env().BETTER_AUTH_SECRET) return null;
-  return (
-    (await auth().api.getSession({ headers: await headers() }))?.user ?? null
-  );
+  const requestHeaders = await headers();
+  // Signed-out visitors do not need to initialize auth or check the database.
+  // Cookie presence alone never authenticates a user; validate it below.
+  if (!getSessionCookie(requestHeaders)) return null;
+  return (await auth().api.getSession({ headers: requestHeaders }))?.user ?? null;
 }
 export async function requireUser() {
   const user = await currentUser();

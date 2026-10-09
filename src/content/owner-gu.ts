@@ -323,6 +323,7 @@ export const ownerGujarati: Record<string, string> = {
     "લિંકની સમયમર્યાદા પૂરી થઈ હશે અથવા તે વપરાઈ ગઈ હશે.",
   "Sign-in failed.": "સાઇન-ઇન થયું નથી.",
   "Opening your workspace…": "તમારું કાર્યસ્થળ ખુલી રહ્યું છે…",
+  "Checking your sign-in…": "તમારું સાઇન-ઇન તપાસી રહ્યા છીએ…",
   "Continue to my invitations": "મારા આમંત્રણો પર જાઓ",
   "Back to your invitation": "આમંત્રણ પર પાછા જાઓ",
   "Let the joy travel.": "ખુશીઓ વહેંચો.",
