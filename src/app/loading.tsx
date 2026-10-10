@@ -1,5 +1,4 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { BrandMark } from "@/components/site";
 export default function Loading() {
   return (
     <main
@@ -9,8 +8,8 @@ export default function Loading() {
       aria-busy="true"
     >
       <div className="loading-emblem">
-        <BrandMark />
-        <span />
+        <span className="brand loading-wordmark">nyota</span>
+        <span className="loading-progress" />
       </div>
       <p role="status">A little Nyota magic…</p>
       <div className="loading-placeholder">

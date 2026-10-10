@@ -2341,17 +2341,8 @@ html[data-input="keyboard"]
 /* Nyota's identity follows the invitation into every workspace surface. */
 .brand {
   font-size: 34px;
-  gap: 10px;
-  letter-spacing: -0.045em;
-}
-.brand .nyota-mark {
-  width: 34px;
-  height: 42px;
-  border-radius: 0;
-  flex-shrink: 0;
-}
-.brand-dot {
-  color: var(--brass);
+  gap: 11px;
+  letter-spacing: -0.035em;
 }
 [data-owner-surface="auth"] > .owner-language-bar {
   background: linear-gradient(to right, #431b2b 50%, var(--card) 50%);
@@ -2363,10 +2354,6 @@ html[data-input="keyboard"]
 }
 .auth-art .brand {
   color: #fff6e5;
-}
-.auth-art .brand .nyota-mark {
-  margin: 0;
-  color: #dbc18d;
 }
 .auth-layout {
   min-height: calc(100svh - 58px);
@@ -2380,18 +2367,14 @@ html[data-input="keyboard"]
   gap: 24px;
 }
 .loading-emblem {
-  width: 84px;
-  height: 104px;
-  padding: 18px;
+  padding: 12px 8px 18px;
   color: var(--primary);
   position: relative;
 }
-.loading-emblem svg {
-  width: 100%;
-  height: 100%;
+.loading-emblem .loading-wordmark {
   animation: nyota-breathe 1.5s ease-in-out infinite;
 }
-.loading-emblem > span {
+.loading-emblem .loading-progress {
   position: absolute;
   bottom: 0;
   left: 15%;
@@ -2927,8 +2910,8 @@ html[data-input="keyboard"]
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .loading-emblem svg,
-  .loading-emblem > span {
+  .loading-emblem .loading-wordmark,
+  .loading-emblem .loading-progress {
     animation: none;
   }
 }
@@ -2940,10 +2923,6 @@ html[data-input="keyboard"]
   font-size: 25px;
   color: var(--primary);
   margin-right: 8px;
-}
-.editor-brand svg {
-  width: 24px;
-  height: 30px;
 }
 .verify-brand {
   margin-bottom: 32px;

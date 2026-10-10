@@ -72,7 +72,6 @@ import { suggestedCoupleSlug } from "@/lib/invitation-url";
 import { DomainEditor } from "./domain-editor";
 import { musicTracks, musicLabels } from "@/lib/music";
 import { MusicPreview } from "./music-preview";
-import { BrandMark } from "@/components/site";
 import { Guest } from "@/features/invitations/guest";
 const stepNames = ["Couple", "Functions", "Appearance", "Review"];
 export function Editor({
@@ -265,8 +264,7 @@ export function Editor({
       <header className="editor-header">
         <div className="editor-title">
           <span className="editor-brand" aria-label="Nyota">
-            <BrandMark />
-            <span>nyota.</span>
+            <span>nyota</span>
           </span>
           <Button
             variant="ghost"
